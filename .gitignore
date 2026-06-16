@@ -1,0 +1,123 @@
+# ─────────────────────────────────────────────
+# Next.js
+# ─────────────────────────────────────────────
+.next/
+out/
+build/
+dist/
+
+# Next.js build info
+next-env.d.ts
+tsconfig.tsbuildinfo
+
+# ─────────────────────────────────────────────
+# Node / Package Managers
+# ─────────────────────────────────────────────
+node_modules/
+.pnp
+.pnp.js
+
+# pnpm
+.pnpm-store/
+# Only ignore pnpm-lock if you want, otherwise keep it for reproducible installs
+# pnpm-lock.yaml
+
+# npm / yarn
+package-lock.json
+yarn.lock
+.yarn/
+.yarnrc.yml
+
+# ─────────────────────────────────────────────
+# Environment Variables  ← NEVER commit these
+# ─────────────────────────────────────────────
+.env
+.env.local
+.env.development
+.env.development.local
+.env.test
+.env.test.local
+.env.production
+.env.production.local
+
+# ─────────────────────────────────────────────
+# TypeScript
+# ─────────────────────────────────────────────
+*.tsbuildinfo
+
+# ─────────────────────────────────────────────
+# Testing
+# ─────────────────────────────────────────────
+coverage/
+.nyc_output/
+
+# ─────────────────────────────────────────────
+# PWA / next-pwa
+# ─────────────────────────────────────────────
+public/sw.js
+public/sw.js.map
+public/workbox-*.js
+public/workbox-*.js.map
+public/worker-*.js
+public/worker-*.js.map
+public/fallback-*.js
+public/fallback-*.js.map
+
+# ─────────────────────────────────────────────
+# OS & Editors
+# ─────────────────────────────────────────────
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.lnk
+
+# VS Code
+.vscode/
+!.vscode/extensions.json
+!.vscode/settings.json
+
+# JetBrains IDEs
+.idea/
+*.iml
+*.iws
+
+# Vim / Emacs
+*.swp
+*.swo
+*~
+\#*\#
+.#*
+
+# ─────────────────────────────────────────────
+# Logs & Debugging
+# ─────────────────────────────────────────────
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.pnpm-debug.log*
+lerna-debug.log*
+
+# ─────────────────────────────────────────────
+# Miscellaneous
+# ─────────────────────────────────────────────
+.vercel/
+.turbo/
+.cache/
+tmp/
+temp/
+*.local
