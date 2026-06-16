@@ -12,7 +12,7 @@ export default function PatientHeader() {
         <Logo className="text-xl" />
         
         <div className="flex items-center gap-3">
-          <LanguageSelector />
+          <LanguageSelector variant="dropdown" />
           {user && (
             <div className="flex items-center gap-2">
               <div className="h-8 w-8 rounded-full bg-brand-secondary/10 text-brand-secondary flex items-center justify-center font-bold text-xs">

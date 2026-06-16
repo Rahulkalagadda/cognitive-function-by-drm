@@ -11,7 +11,7 @@ export default function DoctorHeader() {
 
   return (
     <>
-      <header className="fixed top-0 left-0 w-full z-40 bg-surface-card border-b border-border-default md:sticky md:top-0">
+      <header className="sticky top-0 w-full z-40 bg-surface-card border-b border-border-default">
         <div className="flex justify-between items-center h-16 px-6 max-w-7xl mx-auto md:max-w-none">
           <div className="flex items-center gap-3">
             <button

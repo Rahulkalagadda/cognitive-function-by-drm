@@ -85,19 +85,10 @@ function AssessmentOnboardingPage() {
   const langCode = language || "en";
 
   return (
-    <div className="min-h-screen bg-blue-50 flex flex-col items-center justify-center py-12 px-6">
+    <div className="w-full max-w-2xl mx-auto flex flex-col items-center justify-center py-6 px-4">
       
-      {/* Minimal Header */}
-      <header className="w-full max-w-2xl flex justify-between items-center mb-6 px-2">
-        <Logo className="text-xl" />
-        <div className="flex items-center gap-1.5 text-xs font-bold text-on-surface-variant bg-white/80 backdrop-blur-sm px-3.5 py-1.5 rounded-xl border border-border-default shadow-sm select-none">
-          <Lock className="h-3.5 w-3.5 text-brand-primary" />
-          <span>{getTranslation(langCode, "secureAssessment")}</span>
-        </div>
-      </header>
-
       {/* Welcome Card */}
-      <div className="w-full max-w-2xl bg-white rounded-2xl shadow-card p-10 space-y-8 border border-border-default animate-scaleIn">
+      <div className="w-full bg-white rounded-2xl shadow-card p-6 sm:p-10 space-y-8 border border-border-default animate-scaleIn">
         
         {/* Patient header */}
         <div className="flex flex-col sm:flex-row items-center gap-4 text-center sm:text-left">
@@ -184,7 +175,7 @@ function AssessmentOnboardingPage() {
                   </div>
                   
                   {/* Label */}
-                  <span className="text-[9px] font-bold uppercase mt-1.5 text-on-surface-variant/60 tracking-wider">
+                  <span className="text-[8px] sm:text-[9px] font-bold uppercase mt-1.5 text-on-surface-variant/60 tracking-wider text-center leading-tight max-w-[55px] sm:max-w-none break-words px-0.5 select-none">
                     {dom.label}
                   </span>
 
