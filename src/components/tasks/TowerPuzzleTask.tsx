@@ -122,7 +122,7 @@ export default function TowerPuzzleTask({ isPractice, onComplete }: TowerPuzzleT
   };
 
   return (
-    <div className="flex flex-col items-center justify-between h-full py-4">
+    <div className="flex-1 flex flex-col items-center justify-between w-full py-4">
       <div className="text-center space-y-1">
         <p className="text-[10px] font-bold text-brand-primary uppercase tracking-widest">
           {isPractice ? "Practice Trial Attempt" : "Active Assessment Phase"}
@@ -133,7 +133,7 @@ export default function TowerPuzzleTask({ isPractice, onComplete }: TowerPuzzleT
       </div>
 
       {/* Target state representation */}
-      <div className="border border-border-default bg-surface-muted/30 p-2.5 rounded-xl space-y-1.5 w-full max-w-[280px]">
+      <div className="border border-border-default bg-surface-muted/30 p-2.5 rounded-xl space-y-1.5 w-full max-w-[280px] shrink-0">
         <p className="text-[9px] font-black uppercase text-on-surface-variant text-center tracking-wider">
           Target arrangement (Goal)
         </p>
@@ -158,7 +158,7 @@ export default function TowerPuzzleTask({ isPractice, onComplete }: TowerPuzzleT
       </div>
 
       {/* Play Area */}
-      <div className="flex justify-around items-end h-40 w-full max-w-[320px] bg-white border border-border-default rounded-2xl p-4 shadow-sm relative">
+      <div className="flex justify-around items-end h-36 sm:h-40 w-full max-w-[320px] bg-white border border-border-default rounded-2xl p-4 shadow-sm relative shrink-0">
         {[1, 2, 3].map((pegId) => {
           const isSelectedSource = selectedPeg === pegId;
           const balls = pegs[pegId];

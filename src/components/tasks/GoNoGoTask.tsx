@@ -115,7 +115,7 @@ export default function GoNoGoTask({ isPractice, onComplete, config }: GoNoGoTas
   }, [currentColor, hasResponded]);
 
   return (
-    <div className="flex flex-col items-center justify-between h-full py-6">
+    <div className="flex-1 flex flex-col items-center justify-between w-full py-6">
       <div className="text-center space-y-2">
         <p className="text-[10px] font-bold text-brand-primary uppercase tracking-widest">
           {isPractice ? "Practice Trial Attempt" : "Active Assessment Phase"}
@@ -126,11 +126,11 @@ export default function GoNoGoTask({ isPractice, onComplete, config }: GoNoGoTas
       </div>
 
       {/* Circle target area */}
-      <div className="w-44 h-44 flex items-center justify-center relative select-none">
+      <div className="w-36 h-36 sm:w-44 sm:h-44 shrink-0 flex items-center justify-center relative select-none">
         {currentColor && (
           <div
             onClick={handleResponse}
-            className={`w-36 h-36 rounded-full cursor-pointer transition-transform duration-100 shadow-lg active:scale-95 ${
+            className={`w-28 h-28 sm:w-36 sm:h-36 rounded-full cursor-pointer transition-transform duration-100 shadow-lg active:scale-95 ${
               currentColor === "green" ? "bg-[#10B981]" : "bg-[#EF4444]"
             }`}
           />
@@ -146,7 +146,7 @@ export default function GoNoGoTask({ isPractice, onComplete, config }: GoNoGoTas
         )}
       </div>
 
-      <div className="w-full max-w-xs space-y-4">
+      <div className="w-full max-w-xs space-y-4 shrink-0">
         {/* Mobile touch trigger button */}
         <button
           onClick={handleResponse}

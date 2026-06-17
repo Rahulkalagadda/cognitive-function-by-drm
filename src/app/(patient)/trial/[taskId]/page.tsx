@@ -106,8 +106,8 @@ export default function PracticeTrialPage() {
             renderTaskEngine()
           ) : (
             /* Trial Completion State & Feedback */
-            <div className="flex-1 flex flex-col items-center justify-between py-4">
-              <div className="text-center space-y-2">
+            <div className="flex-1 flex flex-col items-center justify-between py-4 w-full">
+              <div className="text-center space-y-2 shrink-0">
                 <h2 className="text-lg font-extrabold text-[#1E293B] tracking-tight">
                   Practice Trial Completed!
                 </h2>
@@ -117,17 +117,17 @@ export default function PracticeTrialPage() {
               </div>
 
               {/* Big Check Graphic */}
-              <div className="w-28 h-28 rounded-full bg-score-good/10 flex items-center justify-center text-score-good shadow-sm animate-scaleIn">
+              <div className="w-28 h-28 shrink-0 rounded-full bg-score-good/10 flex items-center justify-center text-score-good shadow-sm animate-scaleIn">
                 <svg className="w-14 h-14" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3.5" d="M5 13l4 4L19 7" />
                 </svg>
               </div>
 
-              <div className="w-full max-w-xs flex gap-2">
+              <div className="w-full max-w-xs flex flex-col sm:flex-row gap-3 shrink-0">
                 <button
                   onClick={handleRetry}
                   type="button"
-                  className="flex-1 h-12 border border-border-default hover:bg-surface-page text-on-surface font-extrabold text-xs rounded-xl transition-all active:scale-[0.98] flex items-center justify-center gap-1.5 cursor-pointer"
+                  className="w-full sm:flex-1 h-12 shrink-0 border border-border-default hover:bg-surface-page text-on-surface font-extrabold text-xs rounded-xl transition-all active:scale-[0.98] flex items-center justify-center gap-1.5 cursor-pointer"
                 >
                   <RotateCcw className="h-4 w-4" />
                   Retry Practice
@@ -135,7 +135,7 @@ export default function PracticeTrialPage() {
                 <button
                   onClick={handleStartActual}
                   type="button"
-                  className="flex-1 h-12 bg-brand-primary hover:bg-brand-primary/95 text-white font-extrabold text-xs rounded-xl shadow-md transition-all active:scale-[0.98] flex items-center justify-center gap-1 cursor-pointer"
+                  className="w-full sm:flex-1 h-12 shrink-0 bg-brand-primary hover:bg-brand-primary/95 text-white font-extrabold text-xs rounded-xl shadow-md transition-all active:scale-[0.98] flex items-center justify-center gap-1 cursor-pointer"
                 >
                   Start Actual Test
                   <ArrowRight className="h-4 w-4" />

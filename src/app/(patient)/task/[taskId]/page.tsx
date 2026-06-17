@@ -149,7 +149,7 @@ export default function ActiveTaskPage() {
         />
 
         <Card className="border border-border-default shadow-card rounded-2xl bg-white overflow-hidden flex-1 min-h-[460px] md:max-h-[60vh] h-auto flex flex-col justify-between p-6 sm:p-8">
-          <div className="flex-1 overflow-hidden">
+          <div className="flex-grow flex flex-col overflow-hidden w-full">
             {renderActiveEngine()}
           </div>
         </Card>

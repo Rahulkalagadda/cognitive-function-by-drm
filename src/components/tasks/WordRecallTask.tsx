@@ -95,7 +95,7 @@ export default function WordRecallTask({ isPractice, onComplete, config }: WordR
   };
 
   return (
-    <div className="flex flex-col items-center justify-between h-full py-4 space-y-4">
+    <div className="flex-1 flex flex-col items-center justify-between w-full py-4 space-y-4">
       <div className="text-center space-y-1">
         <p className="text-[10px] font-bold text-brand-primary uppercase tracking-widest">
           {isPractice ? "Practice Trial Attempt" : "Active Assessment Phase"}

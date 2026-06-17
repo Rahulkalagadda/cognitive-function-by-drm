@@ -61,7 +61,7 @@ export default function SectionCompletionStrip({ currentStepIndex, steps }: Sect
               {/* Step Label */}
               <span
                 className={cn(
-                  "text-[9px] font-extrabold uppercase mt-2 tracking-wider text-center max-w-[65px] select-none",
+                  "block w-full text-[8px] sm:text-[9px] font-extrabold uppercase mt-2 tracking-wider text-center max-w-[60px] sm:max-w-[65px] select-none break-words",
                   isCompleted
                     ? "text-brand-secondary"
                     : isActive

@@ -136,7 +136,7 @@ export default function ShapeMatchTask({ isPractice, onComplete }: ShapeMatchTas
   };
 
   return (
-    <div className="flex flex-col items-center justify-between h-full py-4">
+    <div className="flex-1 flex flex-col items-center justify-between w-full py-4">
       <div className="text-center space-y-1">
         <p className="text-[10px] font-bold text-brand-primary uppercase tracking-widest">
           {isPractice ? "Practice Trial Attempt" : "Active Assessment Phase"}
@@ -147,8 +147,8 @@ export default function ShapeMatchTask({ isPractice, onComplete }: ShapeMatchTas
       </div>
 
       {/* Target Shape Canvas */}
-      <div className="w-32 h-32 rounded-2xl border border-border-default bg-surface-page flex items-center justify-center shadow-sm relative overflow-hidden">
-        {renderShapeSVG(targetShape, "w-16 h-16")}
+      <div className="w-28 h-28 sm:w-32 sm:h-32 shrink-0 rounded-2xl border border-border-default bg-surface-page flex items-center justify-center shadow-sm relative overflow-hidden">
+        {renderShapeSVG(targetShape, "w-14 h-14 sm:w-16 sm:h-16")}
 
         {/* Feedback Overlay */}
         {feedback && (
@@ -161,7 +161,7 @@ export default function ShapeMatchTask({ isPractice, onComplete }: ShapeMatchTas
       </div>
 
       {/* Option Grid */}
-      <div className="w-full max-w-[280px] space-y-4">
+      <div className="w-full max-w-[280px] space-y-4 shrink-0">
         <div className="grid grid-cols-2 gap-3">
           {options.map((opt, i) => (
             <button
@@ -169,9 +169,9 @@ export default function ShapeMatchTask({ isPractice, onComplete }: ShapeMatchTas
               type="button"
               onClick={() => handleOptionSelect(opt)}
               disabled={hasClicked}
-              className="h-20 border border-border-default hover:border-brand-primary hover:bg-brand-primary/5 active:scale-95 bg-white rounded-xl flex items-center justify-center transition-all p-4 shadow-sm"
+              className="h-16 sm:h-20 border border-border-default hover:border-brand-primary hover:bg-brand-primary/5 active:scale-95 bg-white rounded-xl flex items-center justify-center transition-all p-4 shadow-sm"
             >
-              {renderShapeSVG(opt, "w-10 h-10")}
+              {renderShapeSVG(opt, "w-8 h-8 sm:w-10 sm:h-10")}
             </button>
           ))}
         </div>
