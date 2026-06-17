@@ -92,6 +92,98 @@ export const CLINICAL_QUESTIONNAIRES: Record<string, Record<string, Omit<Questio
         { id: "q10", text: "यह महसूस करना कि कठिनाइयाँ इतनी बढ़ गई हैं कि आप उन्हें पार नहीं कर सकते?", options: getPssOptions("hi") }
       ]
     }
+  },
+  mr: {
+    "phq-9": {
+      title: "PHQ-9 नैराश्य स्क्रीनिंग",
+      description: "गेल्या २ आठवड्यांत, तुम्हाला खालीलपैकी कोणत्याही समस्येचा किती वेळा त्रास झाला आहे?",
+      items: [
+        { id: "q1", text: "गोष्टी करण्यात कमी रस किंवा आनंद मिळणे", options: getPhqOptions("mr") },
+        { id: "q2", text: "निराश, उदास किंवा हताश वाटणे", options: getPhqOptions("mr") },
+        { id: "q3", text: "झोपायला त्रास होणे किंवा जास्त झोप येणे", options: getPhqOptions("mr") },
+        { id: "q4", text: "थकवा किंवा कमी ऊर्जा जाणवणे", options: getPhqOptions("mr") },
+        { id: "q5", text: "भूक न लागणे किंवा जास्त खाणे", options: getPhqOptions("mr") },
+        { id: "q6", text: "स्वतःबद्दल वाईट वाटणे — किंवा आपण अयशस्वी झालो आहोत किंवा कुटुंबाची निराशा केली आहे असे वाटणे", options: getPhqOptions("mr") },
+        { id: "q7", text: "गोष्टींवर लक्ष केंद्रित करण्यात अडचण येणे, जसे की वर्तमानपत्र वाचणे किंवा टीव्ही पाहणे", options: getPhqOptions("mr") },
+        { id: "q8", text: "इतक्या हळूहळू चालणे किंवा बोलणे की इतर लोकांच्या ते लक्षात येईल? किंवा याउलट — अत्यंत अस्वस्थ वाटणे", options: getPhqOptions("mr") },
+        { id: "q9", text: "आपण मरून गेलो तर बरे होईल किंवा स्वतःला दुखापत करून घेण्याचे विचार येणे", options: getPhqOptions("mr") }
+      ]
+    },
+    "gad-7": {
+      title: "GAD-7 चिंता स्क्रीनिंग",
+      description: "गेल्या २ आठवड्यांत, तुम्हाला खालीलपैकी कोणत्याही समस्येचा किती वेळा त्रास झाला आहे?",
+      items: [
+        { id: "q1", text: "अस्वस्थ, चिंतेत किंवा तणावाखाली वाटणे", options: getPhqOptions("mr") },
+        { id: "q2", text: "चिंता थांबवणे किंवा नियंत्रित करणे शक्य न होणे", options: getPhqOptions("mr") },
+        { id: "q3", text: "वेगवेगळ्या गोष्टींबद्दल खूप जास्त चिंता करणे", options: getPhqOptions("mr") },
+        { id: "q4", text: "आराम करण्यास त्रास होणे", options: getPhqOptions("mr") },
+        { id: "q5", text: "एवढी अस्वस्थता असणे की एका ठिकाणी शांत बसणे कठीण जाणे", options: getPhqOptions("mr") },
+        { id: "q6", text: "सहज चिडचिड किंवा संताप होणे", options: getPhqOptions("mr") },
+        { id: "q7", text: "काहीतरी वाईट घडणार आहे अशी भीती वाटणे", options: getPhqOptions("mr") }
+      ]
+    },
+    "pss-10": {
+      title: "PSS-10 ताणतणाव स्केल",
+      description: "गेल्या एका महिन्यात, तुम्हाला खालील गोष्टींबद्दल किती वेळा वाटले किंवा विचार आला?",
+      items: [
+        { id: "q1", text: "एखाद्या अनपेक्षित घटनेमुळे अस्वस्थ होणे?", options: getPssOptions("mr") },
+        { id: "q2", text: "आपल्या आयुष्यातील महत्त्वाच्या गोष्टींवर आपले नियंत्रण नाही असे वाटणे?", options: getPssOptions("mr") },
+        { id: "q3", text: "घाबरल्यासारखे आणि “तणावाखाली” असल्यासारखे वाटणे?", options: getPssOptions("mr") },
+        { id: "q4", text: "आपल्या वैयक्तिक समस्या सोडवण्याच्या क्षमतेबद्दल आत्मविश्वास वाटणे?", options: getPssOptions("mr") },
+        { id: "q5", text: "गोष्टी आपल्या मनासारख्या चालल्या आहेत असे वाटणे?", options: getPssOptions("mr") },
+        { id: "q6", text: "आपल्याला करायची असलेली सर्व कामे पूर्ण करण्यास आपण असमर्थ आहोत असे आढळणे?", options: getPssOptions("mr") },
+        { id: "q7", text: "आपल्या आयुष्यातील चिडचिड नियंत्रित करण्यास सक्षम असणे?", options: getPssOptions("mr") },
+        { id: "q8", text: "सर्व काही आपल्या नियंत्रणात आहे असे वाटणे?", options: getPssOptions("mr") },
+        { id: "q9", text: "आपल्या नियंत्रणाबाहेर असलेल्या गोष्टींमुळे राग येणे?", options: getPssOptions("mr") },
+        { id: "q10", text: "अडचणी इतक्या वाढल्या आहेत की आपण त्यावर मात करू शकत नाही असे वाटणे?", options: getPssOptions("mr") }
+      ]
+    }
+  },
+  te: {
+    "phq-9": {
+      title: "PHQ-9 డిప్రెషన్ స్క్రీనింగ్",
+      description: "గత 2 వారాలుగా, మీరు ఈ క్రింది సమస్యలలో దేనినైనా ఎంత తరచుగా ఎదుర్కొంటున్నారు?",
+      items: [
+        { id: "q1", text: "పనులపై ఆసక్తి లేదా ఆనందం లేకపోవడం", options: getPhqOptions("te") },
+        { id: "q2", text: "నిరాశ, విచారం లేదా నిస్సహాయత భావన", options: getPhqOptions("te") },
+        { id: "q3", text: "నిద్రపోవడంలో ఇబ్బంది లేదా అతిగా నిద్రపోవడం", options: getPhqOptions("te") },
+        { id: "q4", text: "అలసట లేదా తక్కువ శక్తి ఉన్నట్లు అనిపించడం", options: getPhqOptions("te") },
+        { id: "q5", text: "ఆకలి లేకపోవడం లేదా అతిగా తినడం", options: getPhqOptions("te") },
+        { id: "q6", text: "మీ గురించి మీరే తక్కువగా భావించడం — లేదా మీరు విఫలమయ్యారని లేదా మీ కుటుంబానికి అవమానం తెచ్చారని అనిపించడం", options: getPhqOptions("te") },
+        { id: "q7", text: "విషయాలపై దృష్టి పెట్టడం కష్టంగా ఉండటం, వార్తాపత్రిక చదవడం లేదా టీవీ చూడటం వంటివి", options: getPhqOptions("te") },
+        { id: "q8", text: "ఇతరులు గమనించేంత నెమ్మదిగా నడవడం లేదా మాట్లాడటం? లేదా దీనికి విరుద్ధంగా — చాలా అశాంతిగా ఉండటం", options: getPhqOptions("te") },
+        { id: "q9", text: "చనిపోతే బాగుండునని అనిపించడం లేదా మీకు మీరే హాని చేసుకోవాలనే ఆలోచనలు రావడం", options: getPhqOptions("te") }
+      ]
+    },
+    "gad-7": {
+      title: "GAD-7 ఆందోళన స్క్రీనింగ్",
+      description: "గత 2 వారాలుగా, మీరు ఈ క్రింది సమస్యలలో దేనినైనా ఎంత తరచుగా ఎదుర్కొంటున్నారు?",
+      items: [
+        { id: "q1", text: "ఆందోళన, భయం లేదా ఉద్రిక్తత అనుభూతి", options: getPhqOptions("te") },
+        { id: "q2", text: "చింతించడాన్ని ఆపలేకపోవడం లేదా నియంత్రించలేకపోవడం", options: getPhqOptions("te") },
+        { id: "q3", text: "వివిధ విషయాల గురించి అతిగా చింతించడం", options: getPhqOptions("te") },
+        { id: "q4", text: "ప్రశాంతంగా ఉండలేకపోవడం", options: getPhqOptions("te") },
+        { id: "q5", text: "ఒకచోట స్థిరంగా కూర్చోలేనంత అశాంతిగా ఉండటం", options: getPhqOptions("te") },
+        { id: "q6", text: "సులభంగా చిరాకు పడటం లేదా కోపం రావడం", options: getPhqOptions("te") },
+        { id: "q7", text: "ఏదో చెడు జరగబోతుందనే భయం కలగడం", options: getPhqOptions("te") }
+      ]
+    },
+    "pss-10": {
+      title: "PSS-10 ఒత్తిడి స్కేల్",
+      description: "గత నెలలో, మీరు క్రింది వాటిని ఎంత తరచుగా భావించారు లేదా ఆలోచించారు?",
+      items: [
+        { id: "q1", text: "ఊహించని సంఘటనల వల్ల కలత చెందడం?", options: getPssOptions("te") },
+        { id: "q2", text: "మీ జీవితంలోని ముఖ్యమైన విషయాలను నియంత్రించలేకపోతున్నట్లు అనిపించడం?", options: getPssOptions("te") },
+        { id: "q3", text: "ఆందోళనగా మరియు “ఒత్తిడిగా” అనిపించడం?", options: getPssOptions("te") },
+        { id: "q4", text: "మీ వ్యక్తిగత సమస్యలను పరిష్కరించగల మీ సామర్థ్యంపై నమ్మకం ఉండటం?", options: getPssOptions("te") },
+        { id: "q5", text: "విషయాలు మీ అనుకూలంగా జరుగుతున్నట్లు అనిపించడం?", options: getPssOptions("te") },
+        { id: "q6", text: "మీరు చేయవలసిన పనులన్నింటినీ పూర్తి చేయలేకపోతున్నట్లు అనిపించడమా?", options: getPssOptions("te") },
+        { id: "q7", text: "మీ జీవితంలోని చిరాకులను నియంత్రించగలుగుతున్నారా?", options: getPssOptions("te") },
+        { id: "q8", text: "మీరు నియంత్రణలో ఉన్నట్లు అనిపించడం?", options: getPssOptions("te") },
+        { id: "q9", text: "మీ నియంత్రణలో లేని విషయాల వల్ల కోపం రావడం?", options: getPssOptions("te") },
+        { id: "q10", text: "ఇబ్బందులు మీ అధిగమించలేనంతగా పెరిగిపోయినట్లు అనిపించడం?", options: getPssOptions("te") }
+      ]
+    }
   }
 };
 
@@ -102,6 +194,22 @@ function getPhqOptions(lang: string) {
       { label: "कई दिन", value: 1 },
       { label: "आधे से अधिक दिन", value: 2 },
       { label: "लगभग हर दिन", value: 3 }
+    ];
+  }
+  if (lang === "mr") {
+    return [
+      { label: "अजिबात नाही", value: 0 },
+      { label: "काही दिवस", value: 1 },
+      { label: "अर्ध्याहून अधिक दिवस", value: 2 },
+      { label: "जवळजवळ दररोज", value: 3 }
+    ];
+  }
+  if (lang === "te") {
+    return [
+      { label: "అస్సలు లేదు", value: 0 },
+      { label: "కొన్ని రోజులు", value: 1 },
+      { label: "సగానికి పైగా రోజులు", value: 2 },
+      { label: "దాదాపు ప్రతి రోజు", value: 3 }
     ];
   }
   return [
@@ -120,6 +228,24 @@ function getPssOptions(lang: string) {
       { label: "कभी-कभी", value: 2 },
       { label: "अक्सर", value: 3 },
       { label: "हमेशा", value: 4 }
+    ];
+  }
+  if (lang === "mr") {
+    return [
+      { label: "कधीच नाही", value: 0 },
+      { label: "जवळजवळ कधीच नाही", value: 1 },
+      { label: "कधीकधी", value: 2 },
+      { label: "बऱ्याचदा", value: 3 },
+      { label: "नेहमीच", value: 4 }
+    ];
+  }
+  if (lang === "te") {
+    return [
+      { label: "ఎప్పుడూ లేదు", value: 0 },
+      { label: "దాదాపు ఎప్పుడూ లేదు", value: 1 },
+      { label: "కొన్నిసార్లు", value: 2 },
+      { label: "తరచుగా", value: 3 },
+      { label: "చాలా తరచుగా", value: 4 }
     ];
   }
   return [
