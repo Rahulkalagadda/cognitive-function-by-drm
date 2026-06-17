@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
-import Toaster from "@/components/ui/toaster";
+import { Toaster } from "@/components/ui/toaster";
+import PWARegister from "@/components/shared/PWARegister";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -40,6 +41,7 @@ export default function RootLayout({
       <body className="antialiased bg-surface-page text-on-surface select-none md:select-text">
         {children}
         <Toaster />
+        <PWARegister />
       </body>
     </html>
   );

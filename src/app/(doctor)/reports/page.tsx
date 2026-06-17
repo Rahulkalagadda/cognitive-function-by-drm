@@ -9,7 +9,7 @@ import ErrorState from "@/components/shared/ErrorState";
 import { withErrorBoundary } from "@/components/shared/ErrorBoundary";
 import ReportHeader from "@/components/report/ReportHeader";
 import ScoreGauge from "@/components/report/ScoreGauge";
-import DomainScoreCard from "@/components/report/DomainScoreCard";
+import DomainScoreRow from "@/components/report/DomainScoreRow";
 import RecommendationsBlock from "@/components/report/RecommendationsBlock";
 import { FileText, Printer, Download, ArrowLeft, Search, Eye } from "lucide-react";
 import { CognitiveDomain } from "@/types/assessment.types";
@@ -87,7 +87,7 @@ function ReportsPage() {
           {/* Scores breakdown Section */}
           <section className="grid grid-cols-1 md:grid-cols-3 gap-8 items-center py-4 border-b border-border-default pb-6">
             <div className="flex justify-center md:border-r border-border-default pr-0 md:pr-8">
-              <ScoreGauge score={selectedReport.totalScore} status={selectedReport.scoreStatus} />
+              <ScoreGauge score={selectedReport.totalScore} />
             </div>
 
             <div className="md:col-span-2 space-y-4">
@@ -97,7 +97,7 @@ function ReportsPage() {
               
               <div className="space-y-3.5">
                 {(Object.keys(selectedReport.domainScores) as CognitiveDomain[]).map((dom) => (
-                  <DomainScoreCard
+                  <DomainScoreRow
                     key={dom}
                     domain={dom}
                     score={selectedReport.domainScores[dom]}

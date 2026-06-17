@@ -56,7 +56,7 @@ function AssessmentOnboardingPage() {
   }
 
   const handleStart = () => {
-    router.push(`/assessment/${token}/start`);
+    router.push(`/start?token=${token}`);
   };
 
   const accordionSteps = [

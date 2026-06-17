@@ -14,7 +14,7 @@ export default function PatientLayout({ children }: { children: React.ReactNode 
   }, [initialize]);
 
   // Hide header inside active assessment tests to prevent distraction
-  const isTesting = pathname.includes("/domain/");
+  const isTesting = pathname.includes("/task/") || pathname.includes("/trial/") || pathname.includes("/instructions/");
 
   return (
     <div className="min-h-screen bg-surface-page flex flex-col antialiased">
