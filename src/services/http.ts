@@ -1,9 +1,11 @@
-// In production: use relative URL — Next.js rewrites proxy it to Railway server-side
-// In development: call localhost backend directly
-// This eliminates Mixed Content errors because the browser only ever calls Vercel (HTTPS)
+// ─── API Base URL ────────────────────────────────────────────────────────────
+// Production URL is hardcoded to HTTPS to prevent mixed content errors.
+// Env vars were unreliable due to Vercel's Sensitive flag encrypting them.
+const PROD_API_URL = "https://cognitive-backend-production-503e.up.railway.app/api/v1";
+
 export const BASE_URL =
   process.env.NODE_ENV === "production"
-    ? "/api/v1"
+    ? PROD_API_URL
     : process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api/v1";
 
 function getHeaders(contentType: string | null = "application/json"): HeadersInit {
