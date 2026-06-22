@@ -38,7 +38,7 @@ export async function getPatients(): Promise<Patient[]> {
     }
   }
 
-  const patients = await httpGet<any[]>("/patients");
+  const patients = await httpGet<any[]>("/patients/");
   return patients.map(mapPatientResponse);
 }
 

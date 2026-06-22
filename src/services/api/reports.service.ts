@@ -33,7 +33,7 @@ function mapReportResponse(p: any): AssessmentReport {
 }
 
 export async function getReports(): Promise<AssessmentReport[]> {
-  const reports = await httpGet<any[]>("/reports");
+  const reports = await httpGet<any[]>("/reports/");
   return reports.map(mapReportResponse);
 }
 
