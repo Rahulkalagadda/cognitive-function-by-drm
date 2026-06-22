@@ -24,8 +24,8 @@ function LoginPage() {
     resolver: zodResolver(loginSchema),
     defaultValues: {
       role: "doctor",
-      email: "priya.sharma@caphealth.org",
-      password: "password"
+      email: "",
+      password: ""
     }
   });
 
@@ -36,7 +36,7 @@ function LoginPage() {
         password: data.password,
         role: "doctor"
       });
-      toastSuccess("Welcome, Dr. Priya Sharma", "Clinician session authorized successfully.");
+      toastSuccess("Welcome back", "Clinician session authorized successfully.");
       router.replace("/dashboard");
     } catch (e: any) {
       console.error(e);

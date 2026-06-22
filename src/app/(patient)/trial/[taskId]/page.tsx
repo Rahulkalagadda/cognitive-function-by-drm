@@ -10,13 +10,15 @@ import { Card, CardContent } from "@/components/ui/card";
 import { ArrowRight, RotateCcw } from "lucide-react";
 import { TaskId } from "@/types/task.types";
 
-// Import Task components
+// React task components — no jsPsych, no SSR issues, no HTML strings
 import CPTTask from "@/components/tasks/CPTTask";
 import GoNoGoTask from "@/components/tasks/GoNoGoTask";
-import NBackTask from "@/components/tasks/NBackTask";
+import NBackTask from "@/components/tasks/jspsych/NBackJsPsych";
 import TowerPuzzleTask from "@/components/tasks/TowerPuzzleTask";
 import ShapeMatchTask from "@/components/tasks/ShapeMatchTask";
 import WordRecallTask from "@/components/tasks/WordRecallTask";
+import DividedAttentionTask from "@/components/tasks/DividedAttentionTask";
+import UpdatingTask from "@/components/tasks/UpdatingTask";
 
 export default function PracticeTrialPage() {
   const params = useParams();
@@ -81,7 +83,7 @@ export default function PracticeTrialPage() {
 
     switch (taskId) {
       case "cpt":
-        return <CPPTTaskWrapper key={retryKey} {...props} />;
+        return <CPTTask key={retryKey} {...props} />;
       case "go-no-go":
         return <GoNoGoTask key={retryKey} {...props} />;
       case "n-back":
@@ -92,6 +94,10 @@ export default function PracticeTrialPage() {
         return <ShapeMatchTask key={retryKey} {...props} />;
       case "word-recall":
         return <WordRecallTask key={retryKey} {...props} />;
+      case "divided-attention":
+        return <DividedAttentionTask key={retryKey} {...props} />;
+      case "updating":
+        return <UpdatingTask key={retryKey} {...props} />;
       default:
         return <p className="text-xs text-status-error font-bold">Unknown Task Engine: {taskId}</p>;
     }
@@ -147,9 +153,4 @@ export default function PracticeTrialPage() {
       </Card>
     </div>
   );
-}
-
-// Rename component helper to prevent casing lint conflict
-function CPPTTaskWrapper(props: any) {
-  return <CPTTask {...props} />;
 }

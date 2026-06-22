@@ -21,4 +21,8 @@ export interface AssessmentReport extends BaseEntity {
   domainScores: Record<CognitiveDomain, number>;
   recommendations: string[];
   systemVersion: string;
+  clinicalMetrics?: Record<string, any>;
+  phq9Score?: number;
+  gad7Score?: number;
+  pss10Score?: number;
 }

@@ -26,8 +26,8 @@ export function useVoice() {
         synthRef.current.resume();
       }
       synthRef.current.cancel();
-    } catch (e) {
-      console.warn("SpeechSynthesis cancel failed:", e);
+    } catch {
+      // Silently ignore cancel errors — not actionable by the user
     }
 
     const utterance = new SpeechSynthesisUtterance(text);
@@ -43,8 +43,6 @@ export function useVoice() {
 
     // Retrieve voices
     const voices = synthRef.current.getVoices();
-    console.log(`[TTS] Speaking. Text: "${text.substring(0, 30)}..." | LangCode: ${langCode} | System Lang: ${lang}`);
-    console.log(`[TTS] Total voices loaded in browser: ${voices.length}`);
 
     // Prioritize natural, Google, or Siri voices
     const getVoiceScore = (v: SpeechSynthesisVoice) => {
@@ -67,7 +65,6 @@ export function useVoice() {
 
     if (matchingVoices.length > 0) {
       utterance.voice = matchingVoices[0];
-      console.log(`[TTS] Selected high-quality voice: ${matchingVoices[0].name} (${matchingVoices[0].lang})`);
     } else {
       // Fallback for Marathi to Hindi if needed
       if (langCode === "mr") {
@@ -75,13 +72,10 @@ export function useVoice() {
         fallbackHindi.sort((a, b) => getVoiceScore(b) - getVoiceScore(a));
         if (fallbackHindi.length > 0) {
           utterance.voice = fallbackHindi[0];
-          console.log(`[TTS] No Marathi voice. Selected fallback Hindi voice: ${fallbackHindi[0].name}`);
-        } else {
-          console.log(`[TTS] No Marathi or Hindi voice found. Falling back to system default.`);
         }
-      } else {
-        console.log(`[TTS] No matching voice found for ${langCode}. Falling back to system default.`);
+        // else: system default voice will be used
       }
+      // else: system default voice will be used for other languages
     }
 
     // Adjust rate and pitch for a more natural human cadence
@@ -89,15 +83,12 @@ export function useVoice() {
     utterance.pitch = 1.0;
 
     utterance.onstart = () => {
-      console.log("[TTS] Speech started");
       setIsPlaying(true);
     };
     utterance.onend = () => {
-      console.log("[TTS] Speech ended normally");
       setIsPlaying(false);
     };
-    utterance.onerror = (event) => {
-      console.error("[TTS] Speech error event:", event);
+    utterance.onerror = () => {
       setIsPlaying(false);
     };
 

@@ -26,25 +26,8 @@ export default function StartCountdownPage() {
 
     const interval = setInterval(() => {
       setCount((prev) => {
-        if (prev === 1) {
-          setIsGo(true);
+        if (prev <= 1) {
           clearInterval(interval);
-          
-          // Start the session timer & state
-          startSession();
-
-          // After showing "Go!" for 800ms, redirect to the first step
-          setTimeout(() => {
-            const firstStep = currentSession.steps[0];
-            if (!firstStep) {
-              router.push(`/complete?token=${token}`);
-              return;
-            }
-            
-            const taskId = getTaskIdFromStep(firstStep);
-            router.push(`/instructions/${taskId}?token=${token}&step=0`);
-          }, 800);
-
           return 0;
         }
         return prev - 1;
@@ -52,7 +35,31 @@ export default function StartCountdownPage() {
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [currentSession, router, token, startSession]);
+  }, [currentSession]);
+
+  useEffect(() => {
+    if (count === 0 && !isGo && currentSession) {
+      setIsGo(true);
+      startSession();
+    }
+  }, [count, isGo, currentSession, startSession]);
+
+  useEffect(() => {
+    if (!isGo || !currentSession) return;
+
+    const firstStep = currentSession.steps[0];
+    const redirectTimeout = setTimeout(() => {
+      if (!firstStep) {
+        router.push(`/complete?token=${token}`);
+        return;
+      }
+      
+      const taskId = getTaskIdFromStep(firstStep);
+      router.push(`/instructions/${taskId}?token=${token}&step=0`);
+    }, 800);
+
+    return () => clearTimeout(redirectTimeout);
+  }, [isGo, currentSession, router, token]);
 
   if (!currentSession) {
     return <LoadingScreen message="Initializing session..." />;

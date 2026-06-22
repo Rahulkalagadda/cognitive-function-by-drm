@@ -8,7 +8,6 @@ export function middleware(request: NextRequest) {
   const token = request.cookies.get("cap_auth")?.value;
   const role = request.cookies.get("cap_role")?.value;
 
-  console.log(`[Middleware Check] Path: ${pathname} | Token: ${token} | Role: ${role}`);
 
   // Paths requiring doctor authentication
   const doctorPaths = ["/dashboard", "/patients", "/assessments", "/reports", "/settings"];
@@ -18,12 +17,11 @@ export function middleware(request: NextRequest) {
     (path) => pathname === path || pathname.startsWith(path + "/")
   );
 
-  // Patient paths (excluding public assessment routes)
+  // Patient dashboard/portal paths (not the patient-login page itself)
   const isPatientPath = pathname === "/patient" || pathname.startsWith("/patient/");
 
   if (isDoctorPath) {
     if (!token || role !== "doctor") {
-      console.log(`[Middleware Redirect] Doctor unauthorized for path ${pathname}. Redirecting to /login`);
       const loginUrl = new URL("/login", request.url);
       loginUrl.searchParams.set("from", pathname);
       return NextResponse.redirect(loginUrl);
@@ -32,8 +30,7 @@ export function middleware(request: NextRequest) {
 
   if (isPatientPath) {
     if (!token || role !== "patient") {
-      console.log(`[Middleware Redirect] Patient unauthorized for path ${pathname}. Redirecting to /login`);
-      const loginUrl = new URL("/login", request.url);
+      const loginUrl = new URL("/patient-login", request.url);
       loginUrl.searchParams.set("from", pathname);
       return NextResponse.redirect(loginUrl);
     }

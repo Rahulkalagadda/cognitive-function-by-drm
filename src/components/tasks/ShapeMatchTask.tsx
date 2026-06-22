@@ -80,6 +80,14 @@ export default function ShapeMatchTask({ isPractice, onComplete }: ShapeMatchTas
           correctResponses: correctCount.current,
           commissionErrors: incorrectCount.current,
           completionTime: (Date.now() - startTime.current) / 1000,
+          rawMetrics: {
+            accuracy: (correctCount.current / maxRounds) * 100,
+            reactionTime: Math.round(avgRT),
+            missedResponses: maxRounds - (correctCount.current + incorrectCount.current),
+            correctResponses: correctCount.current,
+            commissionErrors: incorrectCount.current,
+            completionTime: (Date.now() - startTime.current) / 1000,
+          }
         });
       } else {
         setCurrentRound((prev) => prev + 1);

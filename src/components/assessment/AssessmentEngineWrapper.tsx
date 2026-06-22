@@ -119,21 +119,21 @@ function AssessmentEngineWrapperInternal({ token, domainIndex }: AssessmentEngin
   const hasResponse = savedResponseObj !== undefined;
 
   return (
-    <div className="h-screen w-full flex flex-col bg-surface-page overflow-hidden select-none">
+    <div className="h-[100dvh] w-full flex flex-col bg-surface-page overflow-hidden select-none">
       
       {/* Sticky top bar */}
-      <header className="shrink-0 bg-white border-b border-border-default h-16 px-6 flex items-center justify-between z-30 shadow-sm pt-safe">
+      <header className="shrink-0 bg-white border-b border-border-default h-14 px-4 flex items-center justify-between z-30 shadow-sm pt-safe">
         
         {/* Domain badge left */}
         <div className="flex items-center">
-          <span className="inline-flex items-center px-3 py-1 bg-brand-secondary/10 text-brand-secondary border border-brand-secondary/20 text-xs font-bold rounded-full uppercase tracking-wider">
+          <span className="inline-flex items-center px-2.5 py-1 bg-brand-secondary/10 text-brand-secondary border border-brand-secondary/20 text-[9px] font-bold rounded-full uppercase tracking-wider">
             {currentStep.domain} · {domainIndex + 1} of {steps.length}
           </span>
         </div>
 
-        {/* Linear progress bar center */}
-        <div className="hidden sm:block flex-1 max-w-xs mx-8">
-          <div className="h-2 w-full bg-surface-muted rounded-full overflow-hidden">
+        {/* Linear progress bar center — hidden on mobile */}
+        <div className="hidden sm:block flex-1 max-w-xs mx-6">
+          <div className="h-1.5 w-full bg-surface-muted rounded-full overflow-hidden">
             <div
               className="h-full bg-brand-secondary rounded-full transition-all duration-300"
               style={{ width: `${progressPct}%` }}
@@ -151,21 +151,21 @@ function AssessmentEngineWrapperInternal({ token, domainIndex }: AssessmentEngin
       </header>
 
       {/* Pure plug-in zone for task area */}
-      <main role="main" aria-live="polite" className="flex-1 overflow-hidden p-6 max-w-2xl w-full mx-auto flex flex-col justify-center">
-        <div className="bg-white rounded-2xl border border-border-default shadow-card p-6 md:p-8 flex flex-col h-full max-h-[70vh] justify-between overflow-hidden">
+      <main role="main" aria-live="polite" className="flex-1 overflow-y-auto p-3 sm:p-5 max-w-2xl w-full mx-auto flex flex-col">
+        <div className="bg-white rounded-2xl border border-border-default shadow-card p-4 sm:p-6 flex flex-col flex-1 overflow-hidden">
           
           {/* Instructions header */}
-          <div className="shrink-0 mb-4 space-y-1">
-            <h2 className="text-base font-extrabold text-on-surface tracking-tight">
+          <div className="shrink-0 mb-3 space-y-1">
+            <h2 className="text-sm font-extrabold text-on-surface tracking-tight">
               {currentStep.title}
             </h2>
-            <p className="text-xs text-on-surface-variant font-medium leading-relaxed">
+            <p className="text-[11px] text-on-surface-variant font-medium leading-relaxed">
               {currentStep.instructions}
             </p>
           </div>
 
           {/* Plugin target area */}
-          <div className="flex-1 overflow-hidden flex flex-col justify-center opacity-100 transition-opacity duration-300">
+          <div className="flex-1 overflow-hidden flex flex-col">
             <DomainTaskArea
               step={currentStep}
               savedResponse={savedResponseObj?.value}
@@ -177,24 +177,24 @@ function AssessmentEngineWrapperInternal({ token, domainIndex }: AssessmentEngin
       </main>
 
       {/* Fixed bottom nav bar */}
-      <footer className="shrink-0 bg-white border-t border-border-default h-16 px-6 flex items-center justify-between z-30 pb-safe">
+      <footer className="shrink-0 bg-white border-t border-border-default px-4 flex items-center justify-between z-30 pb-safe" style={{height: 'calc(56px + env(safe-area-inset-bottom))'}}>
         
         {/* Previous button */}
         <button
           onClick={handleBack}
           disabled={domainIndex === 0}
           className={cn(
-            "px-4 py-2 border rounded-xl text-xs font-bold transition-all active:scale-95",
+            "px-3 py-2 border rounded-xl text-xs font-bold transition-all active:scale-95 min-h-[44px]",
             domainIndex === 0
               ? "bg-surface-muted border-border-default text-on-surface-variant/30 cursor-not-allowed"
               : "bg-white border-border-default text-on-surface hover:bg-surface-muted"
           )}
         >
-          ← Previous
+          ← Prev
         </button>
 
-        {/* 5 dot indicators center */}
-        <div className="flex gap-2">
+        {/* Dot indicators center */}
+        <div className="flex gap-1.5">
           {steps.map((s, idx) => {
             const isCompleted = idx < domainIndex || currentSession.responses[idx] !== undefined;
             const isCurrent = idx === domainIndex;
@@ -202,12 +202,12 @@ function AssessmentEngineWrapperInternal({ token, domainIndex }: AssessmentEngin
               <div
                 key={idx}
                 className={cn(
-                  "h-2.5 w-2.5 rounded-full transition-all duration-300",
+                  "rounded-full transition-all duration-300",
                   isCurrent
-                    ? "bg-brand-primary ring-4 ring-brand-primary/25 animate-pulse"
+                    ? "h-2.5 w-2.5 bg-brand-primary ring-4 ring-brand-primary/25 animate-pulse"
                     : isCompleted
-                    ? "bg-brand-secondary"
-                    : "bg-border-strong"
+                    ? "h-2 w-2 bg-brand-secondary"
+                    : "h-2 w-2 bg-border-strong"
                 )}
                 title={`Step ${idx + 1}`}
               />
@@ -220,7 +220,7 @@ function AssessmentEngineWrapperInternal({ token, domainIndex }: AssessmentEngin
           onClick={handleNext}
           disabled={!hasResponse}
           className={cn(
-            "px-5 py-2.5 text-white rounded-xl shadow-md transition-all active:scale-95 text-xs font-bold",
+            "px-4 py-2.5 text-white rounded-xl shadow-md transition-all active:scale-95 text-xs font-bold min-h-[44px]",
             !hasResponse
               ? "bg-brand-primary/40 cursor-not-allowed shadow-none"
               : domainIndex === steps.length - 1

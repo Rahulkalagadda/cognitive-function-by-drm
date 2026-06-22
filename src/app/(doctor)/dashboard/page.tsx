@@ -8,6 +8,7 @@ import RecentActivityFeed from "@/components/doctor/RecentActivityFeed";
 import { Users, FileText, CheckCircle2, Clock, Calendar } from "lucide-react";
 import { usePatient } from "@/hooks/usePatient";
 import { useReport } from "@/hooks/useReport";
+import { useAuth } from "@/hooks/useAuth";
 import StatusBadge from "@/components/shared/StatusBadge";
 import Link from "next/link";
 import Avatar from "@/components/shared/Avatar";
@@ -96,6 +97,7 @@ function DashboardSkeleton() {
 function DoctorDashboardPage() {
   const { patients, fetchPatients, isLoading } = usePatient();
   const { reports, fetchReports } = useReport();
+  const { user } = useAuth();
 
   useEffect(() => {
     fetchPatients();
@@ -107,10 +109,10 @@ function DoctorDashboardPage() {
   }
 
   // Quick stats values
-  const totalPatients = patients.length || 142;
-  const pendingTests = patients.filter(p => p.status === "Scheduled").length || 18;
-  const completedTests = patients.filter(p => p.status === "Stable").length || 97;
-  const totalReports = reports.length || 76;
+  const totalPatients = patients.length;
+  const pendingTests = patients.filter(p => p.status === "Scheduled").length;
+  const completedTests = patients.filter(p => p.status === "Stable").length;
+  const totalReports = reports.length;
 
   const todayStr = new Date().toLocaleDateString("en-US", {
     weekday: "long",
@@ -124,7 +126,7 @@ function DoctorDashboardPage() {
       <div className="flex justify-between items-start">
         <div>
           <h2 className="text-xl md:text-2xl font-extrabold text-on-surface">
-            Welcome back, Dr. Priya Sharma
+            Welcome back, {user?.name || "Dr. Priya Sharma"}
           </h2>
           <p className="text-xs font-bold text-on-surface-variant/80 uppercase tracking-widest mt-1">
             Clinical Workspace · {todayStr}

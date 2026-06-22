@@ -26,6 +26,10 @@ export const useAssessmentStore = create<AssessmentState>((set, get) => ({
   setLanguage: (lang) => set({ language: lang }),
 
   loadSession: async (token) => {
+    const { currentSession } = get();
+    if (currentSession && currentSession.token === token) {
+      return;
+    }
     set({ isLoading: true, error: null });
     try {
       const session = await getSessionByToken(token);
@@ -85,7 +89,7 @@ export const useAssessmentStore = create<AssessmentState>((set, get) => ({
     });
   },
 
-  submitResponse: (stepIndex, response) => {
+  submitResponse: async (stepIndex, response) => {
     const { currentSession } = get();
     if (!currentSession) return;
     const newResponses = { ...currentSession.responses, [stepIndex]: response };
@@ -95,6 +99,38 @@ export const useAssessmentStore = create<AssessmentState>((set, get) => ({
         responses: newResponses
       }
     });
+
+    if (response && !response.questionnaire) {
+      try {
+        const { submitStepAttempt } = await import("@/services/api/assessments.service");
+        const currentStep = currentSession.steps[stepIndex];
+        const { getTaskIdFromStep } = await import("@/lib/taskRegistry");
+        const taskId = getTaskIdFromStep(currentStep);
+
+        // All React task components now emit camelCase keys directly.
+        const accuracy        = response.accuracy        ?? 100;
+        const reactionTime    = response.reactionTime    ?? 0;
+        const correctResponses  = response.correctResponses  ?? 0;
+        const missedResponses   = response.missedResponses   ?? 0;
+        const commissionErrors  = response.commissionErrors  ?? 0;
+        const completionTime    = response.completionTime    ?? 0;
+
+        await submitStepAttempt(currentSession.id, stepIndex, {
+          taskId,
+          domain: currentStep.domain,
+          isPractice: false,
+          accuracy,
+          reactionTime,
+          correctResponses,
+          missedResponses,
+          commissionErrors,
+          completionTime,
+          rawMetrics: response
+        });
+      } catch (err) {
+        console.error("Failed to submit live task attempt:", err);
+      }
+    }
   },
 
   tickTimer: () => {

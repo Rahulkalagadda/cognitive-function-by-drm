@@ -12,7 +12,7 @@ export interface CognitiveTaskConfig {
 export interface AssessmentStep {
   stepIndex: number;
   domain: CognitiveDomain;
-  taskType: 'word-recall' | 'reasoning-puzzle' | 'coordination-test' | 'perception-test';
+  taskType: 'word-recall' | 'reasoning-puzzle' | 'coordination-test' | 'perception-test' | 'n-back' | 'divided-attention' | 'updating';
   title: string;
   instructions: string;
   durationSeconds: number;

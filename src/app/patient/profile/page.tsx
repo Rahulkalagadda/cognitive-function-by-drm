@@ -1,20 +1,15 @@
 "use client";
 
-import React, { useEffect } from "react";
-import { useAuth } from "@/hooks/useAuth";
-import { usePatient } from "@/hooks/usePatient";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import LoadingScreen from "@/components/shared/LoadingScreen";
-import PatientBottomNav from "@/components/patient/PatientBottomNav";
 import { 
-  User, 
   Mail, 
   Phone, 
   Calendar, 
   ShieldCheck, 
   LogOut, 
-  Activity, 
-  Heart,
+  Activity,
   HelpCircle,
   Lock
 } from "lucide-react";
@@ -22,46 +17,69 @@ import { toastSuccess } from "@/lib/toast";
 import { withErrorBoundary } from "@/components/shared/ErrorBoundary";
 import { useAssessmentStore } from "@/stores/assessment.store";
 import { getTranslation } from "@/lib/translations";
+import {
+  getPatientPortalProfile,
+  PatientPortalProfile,
+} from "@/services/api/patient-portal.service";
 
 function PatientProfilePage() {
-  const [mounted, setMounted] = React.useState(false);
-  const { user, logout, isAuthenticated, isLoading } = useAuth();
-  const { patients, fetchPatients } = usePatient();
+  const [mounted, setMounted] = useState(false);
+  const [isPatientAuthed, setIsPatientAuthed] = useState<boolean | null>(null);
+  const [patientId, setPatientId] = useState<string | null>(null);
+  const [profile, setProfile] = useState<PatientPortalProfile | null>(null);
+  const [profileLoading, setProfileLoading] = useState(true);
   const { language } = useAssessmentStore();
   const router = useRouter();
 
   useEffect(() => {
     setMounted(true);
+    const storedId = localStorage.getItem("cap_patient_id");
+    const storedRole = localStorage.getItem("cap_role");
+    if (storedId && storedRole === "patient") {
+      setPatientId(storedId);
+      setIsPatientAuthed(true);
+    } else {
+      setIsPatientAuthed(false);
+    }
   }, []);
 
   useEffect(() => {
-    if (mounted && !isLoading) {
-      if (!isAuthenticated) {
-        router.push("/login");
-      }
+    if (isPatientAuthed === false) {
+      router.replace("/patient-login");
     }
-  }, [mounted, isAuthenticated, isLoading, router]);
+  }, [isPatientAuthed, router]);
 
   useEffect(() => {
-    if (mounted) {
-      fetchPatients();
-    }
-  }, [mounted, fetchPatients]);
+    if (!patientId) return;
+    setProfileLoading(true);
+    getPatientPortalProfile(patientId).then((data) => {
+      setProfile(data);
+      setProfileLoading(false);
+    });
+  }, [patientId]);
 
   const handleLogout = () => {
-    logout();
+    // Clear all patient session data
+    localStorage.removeItem("cap_patient_id");
+    localStorage.removeItem("cap_patient_name");
+    localStorage.removeItem("cap_role");
+    document.cookie = "cap_auth=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+    document.cookie = "cap_role=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
     toastSuccess("Logged Out", "Patient session closed securely.");
-    router.replace("/login");
+    router.replace("/patient-login");
   };
 
   const langCode = language || "en";
 
-  if (!mounted || isLoading || !isAuthenticated) {
+  if (!mounted || isPatientAuthed === null) {
     return <LoadingScreen message="Loading profile workspace..." />;
   }
-
-  // Find active patient details matching the logged in patient (Sunita Mehta)
-  const patientRecord = patients.find(p => p.id === user?.id) || patients[0];
+  if (!isPatientAuthed) {
+    return <LoadingScreen message="Redirecting..." />;
+  }
+  if (profileLoading) {
+    return <LoadingScreen message="Loading your profile..." />;
+  }
 
   return (
     <>
@@ -78,18 +96,18 @@ function PatientProfilePage() {
         </div>
 
         {/* Patient Profile Card */}
-        {patientRecord && (
+        {profile ? (
           <div className="bg-surface-card border border-border-default rounded-2xl p-6 shadow-card space-y-5">
             <div className="flex items-center gap-4">
               <div className="h-16 w-16 rounded-full bg-brand-primary/10 text-brand-primary flex items-center justify-center font-bold text-xl border-2 border-brand-primary/20">
-                {patientRecord.name.split(" ").pop()?.[0] || "P"}
+                {profile.name.split(" ").pop()?.[0] || "P"}
               </div>
               <div>
                 <h3 className="text-base font-extrabold text-on-surface leading-tight">
-                  {patientRecord.name}
+                  {profile.name}
                 </h3>
                 <p className="text-[9px] font-extrabold text-brand-secondary border border-brand-secondary/20 bg-brand-secondary/5 px-2 py-0.5 rounded-full inline-block mt-1 uppercase tracking-wider">
-                  ID: {patientRecord.medicalId}
+                  ID: {profile.medical_id}
                 </p>
               </div>
             </div>
@@ -103,7 +121,7 @@ function PatientProfilePage() {
                 <div className="flex justify-between w-full">
                   <span>{getTranslation(langCode, "ageGender")}</span>
                   <span className="text-on-surface font-bold">
-                    {patientRecord.age} {getTranslation(langCode, "years")} / {patientRecord.gender}
+                    {profile.age} {getTranslation(langCode, "years")} / {profile.gender}
                   </span>
                 </div>
               </div>
@@ -112,7 +130,7 @@ function PatientProfilePage() {
                 <Phone className="h-4 w-4 text-on-surface-variant/70 shrink-0" />
                 <div className="flex justify-between w-full">
                   <span>{getTranslation(langCode, "phoneNumber")}</span>
-                  <span className="text-on-surface font-bold">{patientRecord.phone}</span>
+                  <span className="text-on-surface font-bold">{profile.phone}</span>
                 </div>
               </div>
 
@@ -120,7 +138,7 @@ function PatientProfilePage() {
                 <Mail className="h-4 w-4 text-on-surface-variant/70 shrink-0" />
                 <div className="flex justify-between w-full truncate min-w-0">
                   <span>{getTranslation(langCode, "emailAddress")}</span>
-                  <span className="text-on-surface font-bold truncate ml-4">{patientRecord.email}</span>
+                  <span className="text-on-surface font-bold truncate ml-4">{profile.email}</span>
                 </div>
               </div>
 
@@ -128,7 +146,7 @@ function PatientProfilePage() {
                 <Activity className="h-4 w-4 text-on-surface-variant/70 shrink-0" />
                 <div className="flex justify-between w-full">
                   <span>{getTranslation(langCode, "status")}</span>
-                  <span className="text-on-surface font-bold">{patientRecord.status}</span>
+                  <span className="text-on-surface font-bold capitalize">{profile.status}</span>
                 </div>
               </div>
 
@@ -136,10 +154,14 @@ function PatientProfilePage() {
                 <ShieldCheck className="h-4 w-4 text-on-surface-variant/70 shrink-0" />
                 <div className="flex justify-between w-full">
                   <span>{getTranslation(langCode, "assignedClinician")}</span>
-                  <span className="text-on-surface font-bold">{patientRecord.doctorName}</span>
+                  <span className="text-on-surface font-bold">{profile.doctor_name}</span>
                 </div>
               </div>
             </div>
+          </div>
+        ) : (
+          <div className="p-8 text-center border-2 border-dashed border-border-default bg-surface-card rounded-2xl">
+            <p className="text-xs text-on-surface-variant">Profile unavailable. Please try again.</p>
           </div>
         )}
 

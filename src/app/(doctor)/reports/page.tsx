@@ -11,8 +11,10 @@ import ReportHeader from "@/components/report/ReportHeader";
 import ScoreGauge from "@/components/report/ScoreGauge";
 import DomainScoreRow from "@/components/report/DomainScoreRow";
 import RecommendationsBlock from "@/components/report/RecommendationsBlock";
-import { FileText, Printer, Download, ArrowLeft, Search, Eye } from "lucide-react";
+import ClinicalMetricsCard from "@/components/report/ClinicalMetricsCard";
+import { FileText, Printer, Download, ArrowLeft, Search, Eye, Clipboard } from "lucide-react";
 import { CognitiveDomain } from "@/types/assessment.types";
+import { BASE_URL } from "@/services/http";
 
 function ReportsPage() {
   const router = useRouter();
@@ -35,6 +37,20 @@ function ReportsPage() {
     if (typeof window !== "undefined") {
       window.print();
     }
+  };
+
+  const handleDownloadPDF = () => {
+    if (!selectedReport) return;
+    let url = `${BASE_URL}/reports/${selectedReport.id}/pdf`;
+    const params: string[] = [];
+    const doctorToken = localStorage.getItem("cap_token");
+    if (doctorToken) {
+      params.push(`auth_token=${encodeURIComponent(doctorToken)}`);
+    }
+    if (params.length > 0) {
+      url += `?${params.join("&")}`;
+    }
+    window.location.href = url;
   };
 
   const filteredReports = reports.filter((r) =>
@@ -60,7 +76,7 @@ function ReportsPage() {
             <Printer className="h-5 w-5" />
           </button>
           <button
-            onClick={handlePrint}
+            onClick={handleDownloadPDF}
             className="flex items-center gap-2 px-5 py-3 bg-brand-primary text-white rounded-full shadow-lg hover:bg-brand-primary/95 transition-all active:scale-95 text-xs font-bold"
           >
             <Download className="h-4.5 w-4.5" />
@@ -106,6 +122,73 @@ function ReportsPage() {
               </div>
             </div>
           </section>
+
+          {/* Detailed clinical metrics */}
+          <ClinicalMetricsCard clinicalMetrics={selectedReport.clinicalMetrics} />
+
+          {/* Clinical Screening Scales (PHQ-9, GAD-7, PSS-10) */}
+          {((selectedReport.phq9Score !== undefined && selectedReport.phq9Score !== null) ||
+            (selectedReport.gad7Score !== undefined && selectedReport.gad7Score !== null) ||
+            (selectedReport.pss10Score !== undefined && selectedReport.pss10Score !== null)) && (
+            <section className="space-y-3 border-b border-border-default pb-6">
+              <h3 className="text-xs font-extrabold text-on-surface-variant uppercase tracking-wider flex items-center gap-1.5">
+                <Clipboard className="h-3.5 w-3.5" />
+                Clinical Screening Scales
+              </h3>
+              <table className="w-full text-left border-collapse rounded-xl overflow-hidden text-xs">
+                <thead>
+                  <tr className="bg-surface-muted/50">
+                    <th className="p-3 font-extrabold text-on-surface-variant uppercase tracking-wider border border-border-default">Scale</th>
+                    <th className="p-3 font-extrabold text-on-surface-variant uppercase tracking-wider border border-border-default text-center">Score</th>
+                    <th className="p-3 font-extrabold text-on-surface-variant uppercase tracking-wider border border-border-default">Interpretation</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-border-default">
+                  {selectedReport.phq9Score !== undefined && selectedReport.phq9Score !== null && (() => {
+                    const val = selectedReport.phq9Score!;
+                    let interp = "Minimal / Subclinical"; let color = "text-emerald-700";
+                    if (val >= 15) { interp = "Moderately Severe–Severe Depression"; color = "text-red-600"; }
+                    else if (val >= 10) { interp = "Moderate Depression"; color = "text-amber-600"; }
+                    else if (val >= 5) { interp = "Mild Depression"; color = "text-teal-600"; }
+                    return (
+                      <tr key="phq9" className="hover:bg-surface-muted/30">
+                        <td className="p-3 text-on-surface font-medium border border-border-default">PHQ-9 (Depressive Symptomatology)</td>
+                        <td className="p-3 text-center font-extrabold text-on-surface font-mono border border-border-default">{val} / 27</td>
+                        <td className={`p-3 font-semibold border border-border-default ${color}`}>{interp}</td>
+                      </tr>
+                    );
+                  })()}
+                  {selectedReport.gad7Score !== undefined && selectedReport.gad7Score !== null && (() => {
+                    const val = selectedReport.gad7Score!;
+                    let interp = "Minimal / Subclinical"; let color = "text-emerald-700";
+                    if (val >= 15) { interp = "Severe Anxiety"; color = "text-red-600"; }
+                    else if (val >= 10) { interp = "Moderate Anxiety"; color = "text-amber-600"; }
+                    else if (val >= 5) { interp = "Mild Anxiety"; color = "text-teal-600"; }
+                    return (
+                      <tr key="gad7" className="hover:bg-surface-muted/30">
+                        <td className="p-3 text-on-surface font-medium border border-border-default">GAD-7 (Generalized Anxiety Scale)</td>
+                        <td className="p-3 text-center font-extrabold text-on-surface font-mono border border-border-default">{val} / 21</td>
+                        <td className={`p-3 font-semibold border border-border-default ${color}`}>{interp}</td>
+                      </tr>
+                    );
+                  })()}
+                  {selectedReport.pss10Score !== undefined && selectedReport.pss10Score !== null && (() => {
+                    const val = selectedReport.pss10Score!;
+                    let interp = "Low Perceived Stress"; let color = "text-emerald-700";
+                    if (val >= 27) { interp = "High Perceived Stress"; color = "text-red-600"; }
+                    else if (val >= 14) { interp = "Moderate Perceived Stress"; color = "text-amber-600"; }
+                    return (
+                      <tr key="pss10" className="hover:bg-surface-muted/30">
+                        <td className="p-3 text-on-surface font-medium border border-border-default">PSS-10 (Perceived Stress Scale)</td>
+                        <td className="p-3 text-center font-extrabold text-on-surface font-mono border border-border-default">{val} / 40</td>
+                        <td className={`p-3 font-semibold border border-border-default ${color}`}>{interp}</td>
+                      </tr>
+                    );
+                  })()}
+                </tbody>
+              </table>
+            </section>
+          )}
 
           {/* Recommendations block */}
           <RecommendationsBlock recommendations={selectedReport.recommendations} />

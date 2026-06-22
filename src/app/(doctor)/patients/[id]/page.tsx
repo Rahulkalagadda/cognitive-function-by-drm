@@ -8,10 +8,9 @@ import { useParams, useRouter } from "next/navigation";
 import LoadingScreen from "@/components/shared/LoadingScreen";
 import ErrorState from "@/components/shared/ErrorState";
 import StatusBadge from "@/components/shared/StatusBadge";
-import CopyLinkButton from "@/components/patient/CopyLinkButton";
 import Link from "next/link";
 import Avatar from "@/components/shared/Avatar";
-import { Calendar, ChevronLeft, FileText, Phone, Mail, Award, TrendingUp } from "lucide-react";
+import { Calendar, ChevronLeft, FileText, Phone, Mail, TrendingUp } from "lucide-react";
 import { withErrorBoundary } from "@/components/shared/ErrorBoundary";
 import {
   LineChart,
@@ -80,9 +79,6 @@ function PatientDetailPage() {
               Medical ID: {selectedPatient.medicalId} · Status: <StatusBadge status={selectedPatient.status} className="ml-1" />
             </p>
           </div>
-        </div>
-        <div className="shrink-0 flex flex-wrap gap-2">
-          <CopyLinkButton token={selectedPatient.assessmentToken} />
         </div>
       </div>
 

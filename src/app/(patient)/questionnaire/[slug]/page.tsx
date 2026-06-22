@@ -131,7 +131,7 @@ export default function QuestionnairePage() {
     setUnanswered((prev) => prev.filter((id) => id !== itemId));
   };
 
-  const handleNext = () => {
+  const handleNext = async () => {
     const missing = items.filter((item) => responses[item.id] === undefined).map((item) => item.id);
 
     if (missing.length > 0) {
@@ -153,6 +153,20 @@ export default function QuestionnairePage() {
       responses,
       score: totalScore
     });
+
+    try {
+      const { submitQuestionnaireResponse } = await import("@/services/api/assessments.service");
+      await submitQuestionnaireResponse(
+        currentSession.id,
+        slug,
+        language || "en",
+        responses,
+        totalScore,
+        totalQuestions
+      );
+    } catch (err) {
+      console.error("Failed to submit questionnaire responses:", err);
+    }
 
     // Advance sequentially
     if (slug === "phq-9") {

@@ -22,7 +22,7 @@ export const TASK_REGISTRY: Record<TaskId, TaskDefinition> = {
       mr: "कंटिन्यूअस परफॉर्मन्स टेस्ट. स्क्रीनवर अक्षरे दिसतील. जेव्हा तुम्हाला फक्त 'X' अक्षर दिसेल, तेव्हा शक्य तितक्या वेगाने स्पेसबार किंवा स्क्रीनवरील बटण दाबा. इतर अक्षरांसाठी दाबू नका.",
       te: "కంటిన్యూయస్ పెర్ఫార్మెన్స్ టెస్ట్. స్క్రీన్ పై అక్షరాలు కనిపిస్తాయి. మీరు కేవలం ఎక్స్ అక్షరాన్ని చూసినప్పుడు మాత్రమే వీలైనంత వేగంగా స్పేస్ బార్ లేదా బటన్ ను నొక్కండి. ఇతర అక్షరాలకు నొక్కవద్దు."
     },
-    durationSeconds: 30
+    durationSeconds: 90
   },
   "go-no-go": {
     id: "go-no-go",
@@ -35,20 +35,20 @@ export const TASK_REGISTRY: Record<TaskId, TaskDefinition> = {
       mr: "गो नो गो टेस्ट. रंगीत वर्तुळे दिसतील. जेव्हा हिरवे वर्तुळ दिसेल तेव्हा स्पेसबार दाबा. लाल वर्तुळ दिसल्यावर दाबू नका.",
       te: "గో నో గో టెస్ట్. రంగుల వృత్తాలు కనిపిస్తాయి. పచ్చటి వృత్తం కనిపించినప్పుడు స్పేస్ బార్ నొక్కండి. ఎరుపు వృత్తం కనిపించినప్పుడు నొక్కవద్దు."
     },
-    durationSeconds: 30
+    durationSeconds: 80
   },
   "n-back": {
     id: "n-back",
-    title: "2-Back Working Memory Task",
+    title: "N-Back Working Memory Task",
     domain: "Memory",
-    instructions: "Letters will appear one by one. Press Spacebar (or tap match) if the current letter matches the one shown exactly 2 steps ago (e.g. A - B - A).",
+    instructions: "Letters will appear one by one. Press Spacebar (or tap match) if the current letter matches the one shown N steps ago. The N value increases with each level.",
     speakText: {
-      en: "Two Back Working Memory Task. Letters will appear one by one. Press the spacebar or tap the match button if the current letter matches the one shown exactly two steps ago.",
-      hi: "टू बैक वर्किंग मेमोरी टेस्ट। अक्षर एक-एक करके दिखाई देंगे। यदि वर्तमान अक्षर बिल्कुल दो कदम पहले दिखाए गए अक्षर से मेल खाता है, तो स्पेसबार दबाएं।",
-      mr: "टू बॅक वर्किंग मेमरी टेस्ट. अक्षरे एकामागून एक येतील. जर सध्याचे अक्षर बरोबर दोन पायऱ्यांपूर्वी दाखवलेल्या अक्षराशी जुळत असेल तर स्पेसबार दाबा.",
-      te: "టూ బ్యాక్ వర్కింగ్ మెమరీ టెస్ట్. అక్షరాలు ఒక్కొక్కటిగా వస్తాయి. ప్రస్తుతం కనిపిస్తున్న అక్షరం సరిగ్గా రెండు స్థానాల క్రితం కనిపించిన అక్షరంతో సమానమైతే స్పేస్ బార్ నొక్కండి."
+      en: "N Back Working Memory Task. Letters will appear one by one. Press the spacebar or tap the match button if the current letter matches the one shown the required number of steps ago.",
+      hi: "एन बैक वर्किंग मेमोरी टेस्ट। अक्षर एक-एक करके दिखाई देंगे। यदि वर्तमान अक्षर निर्धारित कदम पहले दिखाए गए अक्षर से मेल खाता है, तो स्पेसबार दबाएं।",
+      mr: "एन बॅक वर्किंग मेमरी टेस्ट. अक्षरे एकामागून एक येतील. जर सध्याचे अक्षर ठरलेल्या पायऱ्यांपूर्वी दाखवलेल्या अक्षराशी जुळत असेल तर स्पेसबार दाबा.",
+      te: "ఎన్ బ్యాక్ వర్కింగ్ మెమరీ టెస్ట్. అక్షరాలు ఒక్కొక్కటిగా వస్తాయి. ప్రస్తుతం కనిపిస్తున్న అక్షరం నిర్ణీత స్థానాల క్రితం కనిపించిన అక్షరంతో సమానమైతే స్పేస్ బార్ నొక్కండి."
     },
-    durationSeconds: 40
+    durationSeconds: 100
   },
   "tower-puzzle": {
     id: "tower-puzzle",
@@ -61,7 +61,7 @@ export const TASK_REGISTRY: Record<TaskId, TaskDefinition> = {
       mr: "टॉवर ऑफ लंडन प्लॅनिंग टेस्ट. वरील लक्ष्याशी जुळण्यासाठी तीन पेग्समध्ये रंगीत चेंडू हलवा. शक्य तितक्या कमी हालचालींमध्ये पूर्ण करा.",
       te: "టవర్ ఆఫ్ లండన్ ప్లానింగ్ టెస్ట్. పైన చూపిన అమరికకు సరిపోయేలా రంగు బంతులను మూడు పెగ్స్ మధ్య జరపండి. వీలైనంత తక్కువ మూవ్స్ ఉపయోగించండి."
     },
-    durationSeconds: 50
+    durationSeconds: 150
   },
   "shape-match": {
     id: "shape-match",
@@ -80,27 +80,59 @@ export const TASK_REGISTRY: Record<TaskId, TaskDefinition> = {
     id: "word-recall",
     title: "Word Recall Exercise",
     domain: "Memory",
-    instructions: "Memorize the list of words shown. You will have 15 seconds to review, and later you will write down as many as you can remember.",
+    instructions: "Memorize the list of words shown. You will progress through 3 sets of increasing size. After each set, recall as many words as you can.",
     speakText: {
-      en: "Word Recall Exercise. Memorize the list of words shown. You will have fifteen seconds to review them, and later you will write down as many as you can recall.",
-      hi: "शब्द स्मरण टेस्ट। दिखाए गए शब्दों की सूची को याद रखें। आपके पास उन्हें देखने के लिए 15 सेकंड का समय होगा, और बाद में आपको याद रहे शब्दों को लिखना होगा।",
-      mr: "शब्द स्मरण टेस्ट. दाखवलेले शब्द लक्षात ठेवा. शब्द पाहण्यासाठी तुमच्याकडे १५ सेकंद असतील, त्यानंतर तुम्हाला आठवणारे शब्द लिहावे लागतील.",
-      te: "వర్డ్ రీకాల్ టెస్ట్. కనిపించే పదాల జాబितాను గుర్తుంచుకోండి. చదవడానికి మీకు 15 సెకన్ల సమయం ఉంటుంది, తర్వాత మీకు గుర్తున్న పదాలను రాయాలి."
+      en: "Word Recall Exercise. Memorize the list of words shown. You will go through three sets of increasing size. After each set, recall as many words as you can.",
+      hi: "शब्द स्मरण टेस्ट। दिखाए गए शब्दों की सूची को याद रखें। आप बढ़ती सूचियों के तीन सेट से गुज़रेंगे। प्रत्येक सेट के बाद, जितने शब्द याद हों उन्हें लिखें।",
+      mr: "शब्द स्मरण टेस्ट. दाखवलेले शब्द लक्षात ठेवा. तुम्ही वाढत्या सूचींच्या तीन संचांमधून जाल. प्रत्येक संचानंतर शक्य तितके शब्द आठवा.",
+      te: "వర్డ్ రీకాల్ టెస్ట్. కనిపించే పదాల జాబితాను గుర్తుంచుకోండి. మీరు పెరుగుతున్న మూడు సెట్లలో వెళ్ళాలి. ప్రతి సెట్ తర్వాత మీకు గుర్తున్న పదాలన్నీ రాయండి."
     },
-    durationSeconds: 30
-  }
+    durationSeconds: 120
+  },
+  "divided-attention": {
+    id: "divided-attention",
+    title: "Divided Attention Task",
+    domain: "Attention",
+    instructions: "Track the moving dot on the grid by tapping it. At the same time, press RESPOND whenever the dot flashes RED. Ignore other flash colors.",
+    speakText: {
+      en: "Divided Attention Task. A dot will move around a grid. Tap the dot to show you are tracking it. When the dot flashes red, press Respond as quickly as possible. Ignore other colored flashes.",
+      hi: "विभाजित ध्यान टेस्ट। एक बिंदु ग्रिड पर घूमेगा। उसे ट्रैक करने के लिए उस पर टैप करें। जब बिंदु लाल हो जाए, तो जल्दी से RESPOND दबाएं।",
+      mr: "विभाजित लक्ष टेस्ट. एक बिंदू ग्रिडवर फिरेल. तो ट्रॅक करण्यासाठी त्यावर टॅप करा. बिंदू लाल झाल्यावर शक्य तितक्या लवकर RESPOND दाबा.",
+      te: "డివైడెడ్ అటెన్షన్ టెస్ట్. ఒక చుక్క గ్రిడ్‌పై కదులుతుంది. దాన్ని ట్రాక్ చేయడానికి టాప్ చేయండి. చుక్క ఎరుపు రంగులోకి మారినప్పుడు వేగంగా RESPOND నొక్కండి."
+    },
+    durationSeconds: 120
+  },
+  "updating": {
+    id: "updating",
+    title: "Updating / Working Memory Task",
+    domain: "Memory",
+    instructions: "Watch the digit sequence carefully. At certain points you will be asked to recall the last N digits you saw, in order. The N value increases with each level.",
+    speakText: {
+      en: "Updating Working Memory Task. Watch the digit sequence carefully. At certain points you will be asked to recall the last digits you saw in order. The number of digits to recall increases with each level.",
+      hi: "अपडेटिंग वर्किंग मेमोरी टेस्ट। अंकों की श्रृंखला को ध्यान से देखें। कुछ बिंदुओं पर आपसे अंतिम अंकों को क्रम से याद करने के लिए कहा जाएगा।",
+      mr: "अपडेटिंग वर्किंग मेमरी टेस्ट. अंकांची मालिका काळजीपूर्वक पहा. काही ठिकाणी तुम्हाला शेवटचे अंक क्रमाने आठवण्यास सांगितले जाईल.",
+      te: "అప్‌డేటింగ్ వర్కింగ్ మెమరీ టెస్ట్. అంకెల వరుసను జాగ్రత్తగా చూడండి. కొన్ని స్థానాల్లో మీరు చివరి అంకెలను క్రమంగా గుర్తుంచుకోవాలి."
+    },
+    durationSeconds: 110
+  },
 };
 
 export function getTaskIdFromStep(step: AssessmentStep): TaskId {
-  const domain = step.domain;
+  const domain   = step.domain;
   const taskType = step.taskType;
 
-  if (domain === "Attention") return "cpt";
+  // Explicit taskType overrides take priority
+  if (taskType === "divided-attention") return "divided-attention";
+  if (taskType === "updating")          return "updating";
+  if (taskType === "word-recall")       return "word-recall";
+  if (taskType === "n-back")            return "n-back";
+
+  // Domain-based fallbacks
+  if (domain === "Attention")    return "cpt";
   if (domain === "Coordination") return "go-no-go";
-  if (domain === "Reasoning") return "tower-puzzle";
-  if (domain === "Perception") return "shape-match";
-  if (domain === "Memory") {
-    return taskType === "word-recall" ? "word-recall" : "n-back";
-  }
+  if (domain === "Reasoning")    return "tower-puzzle";
+  if (domain === "Perception")   return "shape-match";
+  if (domain === "Memory")       return "updating";
+
   return "cpt"; // default fallback
 }

@@ -4,21 +4,22 @@ import React, { useEffect, useState } from "react";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useAssessment } from "@/hooks/useAssessment";
 import { TASK_REGISTRY, getTaskIdFromStep } from "@/lib/taskRegistry";
-import { useTimer } from "@/hooks/useTimer";
+import { useAssessmentStore } from "@/stores/assessment.store";
 import LoadingScreen from "@/components/shared/LoadingScreen";
 import ErrorState from "@/components/shared/ErrorState";
 import { Card, CardContent } from "@/components/ui/card";
 import SectionCompletionStrip from "@/components/patient/SectionCompletionStrip";
-import TimerDisplay from "@/components/assessment/TimerDisplay";
 import { TaskId } from "@/types/task.types";
 
-// Import Task components
+// React task components — no jsPsych, no SSR issues, no HTML strings
 import CPTTask from "@/components/tasks/CPTTask";
 import GoNoGoTask from "@/components/tasks/GoNoGoTask";
-import NBackTask from "@/components/tasks/NBackTask";
+import NBackTask from "@/components/tasks/jspsych/NBackJsPsych";
 import TowerPuzzleTask from "@/components/tasks/TowerPuzzleTask";
 import ShapeMatchTask from "@/components/tasks/ShapeMatchTask";
 import WordRecallTask from "@/components/tasks/WordRecallTask";
+import DividedAttentionTask from "@/components/tasks/DividedAttentionTask";
+import UpdatingTask from "@/components/tasks/UpdatingTask";
 
 export default function ActiveTaskPage() {
   const params = useParams();
@@ -47,9 +48,24 @@ export default function ActiveTaskPage() {
     }
   }, [token, loadSession]);
 
-  // Start & tick session timer
-  const isActive = currentSession?.status === "started" && !taskSubmitted;
-  useTimer(isActive);
+  // Sync URL step index to store state
+  useEffect(() => {
+    if (currentSession && currentSession.currentStepIndex !== stepIndex) {
+      const targetStep = currentSession.steps[stepIndex];
+      if (targetStep) {
+        useAssessmentStore.setState((state) => {
+          if (!state.currentSession) return state;
+          return {
+            currentSession: {
+              ...state.currentSession,
+              currentStepIndex: stepIndex,
+              timeRemainingSeconds: targetStep.durationSeconds
+            }
+          };
+        });
+      }
+    }
+  }, [stepIndex, currentSession]);
 
   const taskDef = TASK_REGISTRY[taskId];
 
@@ -74,7 +90,7 @@ export default function ActiveTaskPage() {
     setTaskSubmitted(true);
 
     // Save metrics
-    submitResponse(stepIndex, metrics);
+    await submitResponse(stepIndex, metrics);
 
     const nextIndex = stepIndex + 1;
     if (nextIndex >= currentSession.steps.length) {
@@ -114,6 +130,10 @@ export default function ActiveTaskPage() {
         return <ShapeMatchTask {...props} />;
       case "word-recall":
         return <WordRecallTask {...props} />;
+      case "divided-attention":
+        return <DividedAttentionTask {...props} />;
+      case "updating":
+        return <UpdatingTask {...props} />;
       default:
         return <p className="text-xs text-status-error font-bold">Unknown Task Engine: {taskId}</p>;
     }
@@ -122,33 +142,25 @@ export default function ActiveTaskPage() {
   const currentStep = currentSession.steps[stepIndex];
 
   return (
-    <div className="h-screen w-full flex flex-col bg-surface-page overflow-hidden select-none">
+    <div className="h-[100dvh] w-full flex flex-col bg-surface-page overflow-hidden select-none">
       {/* Top Header Panel */}
-      <header className="shrink-0 bg-white border-b border-border-default h-16 px-6 flex items-center justify-between z-30 shadow-sm pt-safe">
+      <header className="shrink-0 bg-white border-b border-border-default h-14 px-4 flex items-center justify-between z-30 shadow-sm pt-safe">
         <div className="flex items-center">
-          <span className="inline-flex items-center px-3 py-1 bg-brand-primary/10 text-brand-primary border border-brand-primary/20 text-[10px] font-extrabold rounded-full uppercase tracking-wider">
+          <span className="inline-flex items-center px-2.5 py-1 bg-brand-primary/10 text-brand-primary border border-brand-primary/20 text-[9px] font-extrabold rounded-full uppercase tracking-wider">
             {currentStep?.domain} · Step {stepIndex + 1} of {currentSession.steps.length}
           </span>
-        </div>
-
-        {/* High precision timer right */}
-        <div className="shrink-0">
-          <TimerDisplay
-            secondsRemaining={currentSession.timeRemainingSeconds}
-            totalSeconds={currentStep?.durationSeconds ?? 30}
-          />
         </div>
       </header>
 
       {/* Main Task Canvas */}
-      <main className="flex-1 overflow-hidden p-6 max-w-2xl w-full mx-auto flex flex-col justify-center gap-6">
+      <main className="flex-1 overflow-y-auto p-3 sm:p-5 max-w-2xl w-full mx-auto flex flex-col gap-3">
         {/* Step completion strip */}
         <SectionCompletionStrip
           currentStepIndex={stepIndex}
           steps={currentSession.steps.map((s) => ({ domain: s.domain, title: s.title }))}
         />
 
-        <Card className="border border-border-default shadow-card rounded-2xl bg-white overflow-hidden flex-1 min-h-[460px] md:max-h-[60vh] h-auto flex flex-col justify-between p-6 sm:p-8">
+        <Card className="border border-border-default shadow-card rounded-2xl bg-white overflow-hidden flex-1 flex flex-col p-4 sm:p-6">
           <div className="flex-grow flex flex-col overflow-hidden w-full">
             {renderActiveEngine()}
           </div>
@@ -156,7 +168,7 @@ export default function ActiveTaskPage() {
       </main>
 
       {/* Bottom status bar indicator */}
-      <footer className="shrink-0 bg-white border-t border-border-default h-10 px-6 flex items-center justify-between text-[9px] text-on-surface-variant/50 font-bold pb-safe">
+      <footer className="shrink-0 bg-white border-t border-border-default h-9 px-4 flex items-center justify-between text-[8px] text-on-surface-variant/40 font-bold pb-safe">
         <span>PATIENT PORTAL SECURED</span>
         <span>HIPAA COMPLIANT</span>
       </footer>

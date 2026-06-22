@@ -9,23 +9,19 @@ interface ScoreGaugeProps {
 }
 
 export default function ScoreGauge({ score, className }: ScoreGaugeProps) {
-  // Determine color and status text
-  let statusText = "Attention Required";
-  let statusColor = "text-[#B91C1C] border-[#B91C1C]/20 bg-[#B91C1C]/10";
-  let gaugeColor = "stroke-[#B91C1C]";
+  // 3-tier clinical classification aligned to DB generated column (75/50 thresholds)
+  let statusText = "Below Average";
+  let statusColor = "text-[#dc2626] border-[#dc2626]/20 bg-[#dc2626]/10";
+  let gaugeColor = "stroke-[#dc2626]";
 
-  if (score >= 85) {
-    statusText = "Exceptional";
-    statusColor = "text-[#166534] border-[#166534]/20 bg-[#166534]/10";
-    gaugeColor = "stroke-[#166534]";
-  } else if (score >= 70) {
-    statusText = "Good (Above Average)";
-    statusColor = "text-[#15803D] border-[#15803D]/20 bg-[#15803D]/10";
-    gaugeColor = "stroke-[#15803D]";
+  if (score >= 75) {
+    statusText = "Above Average";
+    statusColor = "text-[#0f766e] border-[#0f766e]/20 bg-[#0f766e]/10";
+    gaugeColor = "stroke-[#0f766e]";
   } else if (score >= 50) {
-    statusText = "Monitoring Needed";
-    statusColor = "text-[#B45309] border-[#B45309]/20 bg-[#B45309]/10";
-    gaugeColor = "stroke-[#B45309]";
+    statusText = "Average";
+    statusColor = "text-[#d97706] border-[#d97706]/20 bg-[#d97706]/10";
+    gaugeColor = "stroke-[#d97706]";
   }
 
   // Dasharray calculation for circle circumference (2 * pi * r ≈ 100)
