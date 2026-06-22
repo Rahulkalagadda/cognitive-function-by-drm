@@ -37,7 +37,7 @@ yarn.lock
 .env.development.local
 .env.test
 .env.test.local
-.env.production
+# .env.production is intentionally tracked (only NEXT_PUBLIC_* vars — safe to commit)
 .env.production.local
 
 # ─────────────────────────────────────────────
