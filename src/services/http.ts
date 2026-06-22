@@ -1,4 +1,9 @@
-export const BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api/v1";
+const _rawApiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api/v1";
+
+// Force HTTPS in production — guards against env vars being incorrectly set to http://
+export const BASE_URL = _rawApiUrl.startsWith("http://") && !_rawApiUrl.includes("localhost")
+  ? _rawApiUrl.replace("http://", "https://")
+  : _rawApiUrl;
 
 function getHeaders(contentType: string | null = "application/json"): HeadersInit {
   const headers: Record<string, string> = {};
