@@ -1,9 +1,10 @@
-const _rawApiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api/v1";
-
-// Force HTTPS in production — guards against env vars being incorrectly set to http://
-export const BASE_URL = _rawApiUrl.startsWith("http://") && !_rawApiUrl.includes("localhost")
-  ? _rawApiUrl.replace("http://", "https://")
-  : _rawApiUrl;
+// In production: use relative URL — Next.js rewrites proxy it to Railway server-side
+// In development: call localhost backend directly
+// This eliminates Mixed Content errors because the browser only ever calls Vercel (HTTPS)
+export const BASE_URL =
+  process.env.NODE_ENV === "production"
+    ? "/api/v1"
+    : process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api/v1";
 
 function getHeaders(contentType: string | null = "application/json"): HeadersInit {
   const headers: Record<string, string> = {};
