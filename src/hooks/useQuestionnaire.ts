@@ -2,8 +2,8 @@ import { useQuestionnaireStore } from "@/stores/questionnaire.store";
 import { QuestionnaireSlug } from "@/types/questionnaire.types";
 
 export function useQuestionnaire(slug: QuestionnaireSlug) {
-  const responses = useQuestionnaireStore((state) => state.responses[slug]);
-  const isCompleted = useQuestionnaireStore((state) => state.completed[slug]);
+  const responses = useQuestionnaireStore((state) => state.responses[slug]) || {};
+  const isCompleted = useQuestionnaireStore((state) => state.completed[slug]) || false;
   const submitAnswer = useQuestionnaireStore((state) => state.submitAnswer);
   const submitQuestionnaire = useQuestionnaireStore((state) => state.submitQuestionnaire);
   const resetQuestionnaire = useQuestionnaireStore((state) => state.resetQuestionnaire);

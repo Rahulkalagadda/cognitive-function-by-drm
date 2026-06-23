@@ -146,7 +146,6 @@ export default function UpdatingTask({ isPractice, onComplete }: UpdatingTaskPro
   // Per-level refs
   const sequenceRef       = useRef<number[]>([]);
   const probeIndicesRef   = useRef<Set<number>>(new Set());
-  const historyRef        = useRef<number[]>([]);
   const correctProbesRef  = useRef(0);
   const totalProbesRef    = useRef(0);
   const falseAlarmsRef    = useRef(0);
@@ -179,7 +178,6 @@ export default function UpdatingTask({ isPractice, onComplete }: UpdatingTaskPro
     const seq = generateSequence(cfg.totalItems);
     sequenceRef.current      = seq;
     probeIndicesRef.current  = generateProbeIndices(cfg.totalItems, cfg.probeCount, cfg.n);
-    historyRef.current       = [];
     correctProbesRef.current = 0;
     totalProbesRef.current   = 0;
     falseAlarmsRef.current   = 0;
@@ -265,8 +263,6 @@ export default function UpdatingTask({ isPractice, onComplete }: UpdatingTaskPro
 
     const digit = sequenceRef.current[itemIndex];
 
-    // Push to history BEFORE rendering the digit so slice(-n) is always correct
-    historyRef.current.push(digit);
     setCurrentDigit(digit);
 
     // Is this a probe point?
@@ -276,7 +272,7 @@ export default function UpdatingTask({ isPractice, onComplete }: UpdatingTaskPro
       const timer = setTimeout(() => {
         setCurrentDigit(null);
         // Capture the last-N slice SYNCHRONOUSLY, store in ref AND state
-        const lastN = [...historyRef.current.slice(-cfg.n)];
+        const lastN = [...sequenceRef.current.slice(itemIndex - cfg.n + 1, itemIndex + 1)];
         probeTargetRef.current = lastN;
         setProbeTargetDisplay(lastN);
         setPhase("probe");
@@ -453,7 +449,7 @@ export default function UpdatingTask({ isPractice, onComplete }: UpdatingTaskPro
       </div>
 
       <div className="w-full max-w-xs flex justify-between text-[10px] text-on-surface-variant/70 font-semibold px-1 shrink-0">
-        <span>Item: {Math.min(itemIndex, cfg?.totalItems ?? 0)}/{cfg?.totalItems}</span>
+        <span>Item: {Math.min(itemIndex + 1, cfg?.totalItems ?? 0)}/{cfg?.totalItems}</span>
         {!isPractice && (
           <div className="flex gap-3">
             <span>Probes correct: {correctProbesRef.current}</span>

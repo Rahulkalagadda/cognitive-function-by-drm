@@ -410,22 +410,18 @@ export default function ResultsReportPage() {
                     );
                   })()}
 
-                  {selectedReport.pss10Score !== undefined && selectedReport.pss10Score !== null && (() => {
-                    const val = selectedReport.pss10Score;
-                    let interp = "Low Perceived Stress";
-                    let color = "text-teal-600 font-semibold";
-                    if (val >= 27) {
-                      interp = "High Perceived Stress";
-                      color = "text-red-600 font-semibold";
-                    } else if (val >= 14) {
-                      interp = "Moderate Perceived Stress";
-                      color = "text-amber-600 font-semibold";
-                    }
+                  {selectedReport.araqScore !== undefined && selectedReport.araqScore !== null && (() => {
+                    const val = selectedReport.araqScore!;
                     return (
                       <tr className="hover:bg-slate-50/50">
-                        <td className="p-4 text-sm text-slate-700">PSS-10 (Perceived Stress Scale)</td>
-                        <td className="p-4 text-sm text-slate-700 text-center font-semibold">{val} / 40</td>
-                        <td className={`p-4 text-sm ${color}`}>{interp}</td>
+                        <td className="p-4 text-sm text-slate-700">ARAQ (ADHD-Related Avoidance & Anxiety)</td>
+                        <td className="p-4 text-sm text-slate-700 text-center font-semibold">{val} / 104</td>
+                        <td className="p-4 text-xs text-[#2563EB] font-semibold space-y-0.5">
+                          <div>A (Exec Dysf): {selectedReport.araqSecAScore ?? 0}/32</div>
+                          <div>B (Anticip Anxiety): {selectedReport.araqSecBScore ?? 0}/24</div>
+                          <div>C (Fear Failure): {selectedReport.araqSecCScore ?? 0}/32</div>
+                          <div>D (Functional Imp): {selectedReport.araqSecDScore ?? 0}/16</div>
+                        </td>
                       </tr>
                     );
                   })()}

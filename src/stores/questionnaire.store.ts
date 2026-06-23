@@ -13,12 +13,14 @@ export const useQuestionnaireStore = create<QuestionnaireState>((set) => ({
   responses: {
     "phq-9": {},
     "gad-7": {},
-    "pss-10": {},
+    "araq": {},
+    "mixed": {},
   },
   completed: {
     "phq-9": false,
     "gad-7": false,
-    "pss-10": false,
+    "araq": false,
+    "mixed": false,
   },
 
   submitAnswer: (slug, questionId, value) => {

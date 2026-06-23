@@ -4,7 +4,8 @@ import React, { useEffect, useState } from "react";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useAssessment } from "@/hooks/useAssessment";
 import { useQuestionnaire } from "@/hooks/useQuestionnaire";
-import { CLINICAL_QUESTIONNAIRES } from "@/lib/questionnaires";
+import { useQuestionnaireStore } from "@/stores/questionnaire.store";
+import { CLINICAL_QUESTIONNAIRES, getMixedQuestionnaire } from "@/lib/questionnaires";
 import LoadingScreen from "@/components/shared/LoadingScreen";
 import ErrorState from "@/components/shared/ErrorState";
 import { Card, CardContent } from "@/components/ui/card";
@@ -27,11 +28,17 @@ const badgeLabels: Record<string, Record<string, string>> = {
     mr: "चिंता स्क्रीनिंग",
     te: "ఆందోళన స్క్రీనింగ్"
   },
-  "pss-10": {
-    en: "Stress screening",
-    hi: "तनाव स्क्रीनिंग",
-    mr: "ताणतणाव स्क्रीनिंग",
-    te: "ఒత్తిడి స్క్రీనింగ్"
+  "araq": {
+    en: "ADHD Avoidance & Anxiety screening",
+    hi: "ADHD बचाव और चिंता स्क्रीनिंग",
+    mr: "ADHD टाळणे आणि चिंता स्क्रीनिंग",
+    te: "ADHD నివారణ & ఆందోళన స్క్రీనింగ్"
+  },
+  "mixed": {
+    en: "Clinical Questionnaire",
+    hi: "स्वास्थ्य प्रश्नावली",
+    mr: "आरोग्य प्रश्नावली",
+    te: "ఆరోగ్య ప్రశ్నావళి"
   }
 };
 
@@ -44,7 +51,8 @@ export default function QuestionnairePage() {
   const token = searchParams.get("token");
 
   const { currentSession, loadSession, isLoading, error, language, submitResponse } = useAssessment();
-  const { responses, submitAnswer, totalScore } = useQuestionnaire(slug);
+  const { responses: storeResponses, submitAnswer, totalScore: storeTotalScore } = useQuestionnaire(slug);
+  const [mixedAnswers, setMixedAnswers] = useState<Record<string, number>>({});
   const [unanswered, setUnanswered] = useState<string[]>([]);
   const [mounted, setMounted] = useState(false);
 
@@ -57,6 +65,12 @@ export default function QuestionnairePage() {
       loadSession(token);
     }
   }, [token, loadSession]);
+
+  useEffect(() => {
+    if (mounted && slug !== "mixed" && token) {
+      router.replace(`/questionnaire/mixed?token=${token}`);
+    }
+  }, [mounted, slug, token, router]);
 
   if (!mounted || isLoading) {
     return <LoadingScreen message="Loading questionnaire items..." />;
@@ -75,7 +89,10 @@ export default function QuestionnairePage() {
   }
 
   const langCode = language || "en";
-  const questionnaireData = CLINICAL_QUESTIONNAIRES[langCode]?.[slug] || CLINICAL_QUESTIONNAIRES["en"]?.[slug];
+  const mixedData = getMixedQuestionnaire(langCode);
+  const questionnaireData = slug === "mixed"
+    ? mixedData
+    : (CLINICAL_QUESTIONNAIRES[langCode]?.[slug] || CLINICAL_QUESTIONNAIRES["en"]?.[slug]);
 
   if (!questionnaireData) {
     return (
@@ -89,13 +106,15 @@ export default function QuestionnairePage() {
   }
 
   const items = questionnaireData.items;
-  const answeredCount = items.filter((item) => responses[item.id] !== undefined).length;
+  const answeredCount = slug === "mixed"
+    ? Object.keys(mixedAnswers).length
+    : items.filter((item) => storeResponses[item.id] !== undefined).length;
   const totalQuestions = items.length;
   const isAllAnswered = answeredCount === totalQuestions;
 
   // Visual specifications based on slug
-  let sectionIndexText = "Section 1 of 3 · Questionnaires";
-  let screeningTitleText = "PHQ-9 Depression Screening";
+  let sectionIndexText = "Screening Questionnaires";
+  let screeningTitleText = "Clinical Health Questionnaire";
   let overallProgressPercent = 5;
   let cardClass = "border border-border-default bg-white";
   let badgeClass = "bg-[#eff4ff] text-[#004ac6] ring-1 ring-inset ring-[#004ac6]/10";
@@ -114,9 +133,9 @@ export default function QuestionnairePage() {
     unselectedPillHoverClass = "hover:border-[#0D9488]";
     themeButtonClass = "bg-[#0D9488] hover:bg-[#0D9488]/95 text-white shadow-[#0D9488]/25";
     timelineColorClass = "bg-[#0D9488]";
-  } else if (slug === "pss-10") {
+  } else if (slug === "araq") {
     sectionIndexText = "Section 3 of 3 · Questionnaires";
-    screeningTitleText = "PSS Stress Scale";
+    screeningTitleText = "ARAQ ADHD Avoidance & Anxiety";
     overallProgressPercent = 20;
     cardClass = "border border-border-default border-l-4 border-[#F59E0B] bg-white";
     badgeClass = "bg-[#ffdbcd]/30 text-[#943700] ring-1 ring-inset ring-[#F59E0B]/10";
@@ -127,12 +146,18 @@ export default function QuestionnairePage() {
   }
 
   const handleOptionSelect = (itemId: string, value: number) => {
-    submitAnswer(itemId, value);
+    if (slug === "mixed") {
+      setMixedAnswers((prev) => ({ ...prev, [itemId]: value }));
+    } else {
+      submitAnswer(itemId, value);
+    }
     setUnanswered((prev) => prev.filter((id) => id !== itemId));
   };
 
   const handleNext = async () => {
-    const missing = items.filter((item) => responses[item.id] === undefined).map((item) => item.id);
+    const missing = items
+      .filter((item) => (slug === "mixed" ? mixedAnswers[item.id] === undefined : storeResponses[item.id] === undefined))
+      .map((item) => item.id);
 
     if (missing.length > 0) {
       setUnanswered(missing);
@@ -140,19 +165,101 @@ export default function QuestionnairePage() {
       return;
     }
 
+    if (slug === "mixed") {
+      // Split responses into phq-9, gad-7, and araq
+      const phqAnswers: Record<string, number> = {};
+      const gadAnswers: Record<string, number> = {};
+      const araqAnswers: Record<string, number> = {};
+
+      Object.entries(mixedAnswers).forEach(([key, val]) => {
+        if (key.startsWith("phq_")) {
+          phqAnswers[key.replace("phq_", "")] = val;
+        } else if (key.startsWith("gad_")) {
+          gadAnswers[key.replace("gad_", "")] = val;
+        } else if (key.startsWith("araq_")) {
+          araqAnswers[key.replace("araq_", "")] = val;
+        }
+      });
+
+      const phqTotal = Object.values(phqAnswers).reduce((sum, v) => sum + v, 0);
+      const gadTotal = Object.values(gadAnswers).reduce((sum, v) => sum + v, 0);
+      const araqTotal = Object.values(araqAnswers).reduce((sum, v) => sum + v, 0);
+
+      // Submit results to Zustand store to track session progress
+      submitResponse(0, {
+        questionnaire: "phq-9",
+        responses: phqAnswers,
+        score: phqTotal
+      });
+      submitResponse(1, {
+        questionnaire: "gad-7",
+        responses: gadAnswers,
+        score: gadTotal
+      });
+      submitResponse(2, {
+        questionnaire: "araq",
+        responses: araqAnswers,
+        score: araqTotal
+      });
+
+      // Mark questionnaires as completed in the store
+      const { submitQuestionnaire } = useQuestionnaireStore.getState();
+      submitQuestionnaire("phq-9");
+      submitQuestionnaire("gad-7");
+      submitQuestionnaire("araq");
+
+      // Submit API calls sequentially
+      try {
+        const { submitQuestionnaireResponse } = await import("@/services/api/assessments.service");
+        
+        await submitQuestionnaireResponse(
+          currentSession.id,
+          "phq-9",
+          language || "en",
+          phqAnswers,
+          phqTotal,
+          9
+        );
+
+        await submitQuestionnaireResponse(
+          currentSession.id,
+          "gad-7",
+          language || "en",
+          gadAnswers,
+          gadTotal,
+          7
+        );
+
+        await submitQuestionnaireResponse(
+          currentSession.id,
+          "araq",
+          language || "en",
+          araqAnswers,
+          araqTotal,
+          26
+        );
+      } catch (err) {
+        console.error("Failed to submit questionnaire responses:", err);
+      }
+
+      router.push(`/start?token=${token}`);
+      return;
+    }
+
     // Submit results to Zustand assessment responses (use stepIndex dynamically or map to slug index)
-    // We will save it in the responses list. Let's find an index or save by key slug.
-    // For now we submit under a unique identifier key to maintain layout.
-    // We map step index to: 0 (phq-9), 1 (gad-7), 2 (pss-10) to avoid overwrite.
     let targetStepIndex = 0;
     if (slug === "gad-7") targetStepIndex = 1;
-    if (slug === "pss-10") targetStepIndex = 2;
+    if (slug === "araq") targetStepIndex = 2;
 
     submitResponse(targetStepIndex, {
       questionnaire: slug,
-      responses,
-      score: totalScore
+      responses: storeResponses,
+      score: storeTotalScore
     });
+
+    // Also mark this questionnaire as completed in the store
+    const { submitQuestionnaire } = useQuestionnaireStore.getState();
+    submitQuestionnaire(slug);
 
     try {
       const { submitQuestionnaireResponse } = await import("@/services/api/assessments.service");
@@ -160,8 +267,8 @@ export default function QuestionnairePage() {
         currentSession.id,
         slug,
         language || "en",
-        responses,
-        totalScore,
+        storeResponses,
+        storeTotalScore,
         totalQuestions
       );
     } catch (err) {
@@ -172,27 +279,31 @@ export default function QuestionnairePage() {
     if (slug === "phq-9") {
       router.push(`/questionnaire/gad-7?token=${token}`);
     } else if (slug === "gad-7") {
-      router.push(`/questionnaire/pss-10?token=${token}`);
-    } else if (slug === "pss-10") {
+      router.push(`/questionnaire/araq?token=${token}`);
+    } else if (slug === "araq") {
       router.push(`/start?token=${token}`);
     }
   };
 
   const handleBack = () => {
+    if (slug === "mixed") {
+      router.push(`/assessment/${token}`);
+      return;
+    }
     if (slug === "phq-9") {
       router.push(`/assessment/${token}`);
     } else if (slug === "gad-7") {
       router.push(`/questionnaire/phq-9?token=${token}`);
-    } else if (slug === "pss-10") {
+    } else if (slug === "araq") {
       router.push(`/questionnaire/gad-7?token=${token}`);
     }
   };
 
   // Completion statuses for the timeline
   const completedTimeline = {
-    "phq-9": slug !== "phq-9", // PHQ-9 is done if we are on GAD-7 or PSS-10
-    "gad-7": slug === "pss-10", // GAD-7 is done if we are on PSS-10
-    "pss-10": false
+    "phq-9": slug !== "phq-9",
+    "gad-7": slug === "araq",
+    "araq": false
   };
 
   return (
@@ -256,7 +367,7 @@ export default function QuestionnairePage() {
           <div className="flex flex-col gap-8 divide-y divide-border-default/40">
             {items.map((item, index) => {
               const isError = unanswered.includes(item.id);
-              const selectedValue = responses[item.id];
+              const selectedValue = slug === "mixed" ? mixedAnswers[item.id] : storeResponses[item.id];
 
               return (
                 <div key={item.id} className={cn("flex flex-col gap-4 transition-all", index > 0 && "pt-6")}>
@@ -273,12 +384,12 @@ export default function QuestionnairePage() {
                   {/* Option Pill Buttons */}
                   <div
                     className={cn(
-                      slug === "pss-10"
+                      (slug as string) === "pss-10" || slug === "mixed" || item.options.length > 4
                         ? "flex flex-wrap gap-2"
                         : "grid grid-cols-2 md:grid-cols-4 gap-2"
                     )}
                   >
-                    {item.options.map((opt) => {
+                    {item.options.map((opt: any) => {
                       const isSelected = selectedValue === opt.value;
                       return (
                         <button
@@ -315,80 +426,88 @@ export default function QuestionnairePage() {
         </section>
 
         {/* Bottom Completion Preview Strip */}
-        <div className="mt-10 flex items-center justify-center gap-6 select-none">
-          {/* PHQ-9 */}
-          <div className="flex flex-col items-center gap-1.5">
-            <div
-              className={cn(
-                "w-8 h-8 rounded-full flex items-center justify-center border transition-all duration-300 shadow-sm",
-                completedTimeline["phq-9"]
-                  ? "bg-brand-secondary border-brand-secondary text-white"
-                  : slug === "phq-9"
-                  ? "border-[#2563EB] ring-4 ring-[#2563EB]/25"
-                  : "bg-surface-card border-border-default text-on-surface-variant/40"
-              )}
-            >
-              {completedTimeline["phq-9"] ? (
-                <Check className="h-4.5 w-4.5 stroke-[3px]" />
-              ) : (
-                <span className={cn("text-xs font-black", slug === "phq-9" ? "text-[#2563EB]" : "text-on-surface-variant/40")}>
-                  1
-                </span>
-              )}
-            </div>
-            <span className={cn("text-[9px] font-extrabold tracking-wider uppercase", slug === "phq-9" ? "text-[#2563EB]" : "text-on-surface-variant/50")}>
-              PHQ-9
-            </span>
-          </div>
-
-          <div className="h-px w-8 bg-border-default" />
-
-          {/* GAD-7 */}
-          <div className="flex flex-col items-center gap-1.5">
-            <div
-              className={cn(
-                "w-8 h-8 rounded-full flex items-center justify-center border transition-all duration-300 shadow-sm",
-                completedTimeline["gad-7"]
-                  ? "bg-brand-secondary border-brand-secondary text-white"
-                  : slug === "gad-7"
-                  ? "border-[#0D9488] ring-4 ring-[#0D9488]/25"
-                  : "bg-surface-card border-border-default text-on-surface-variant/40"
-              )}
-            >
-              {completedTimeline["gad-7"] ? (
-                <Check className="h-4.5 w-4.5 stroke-[3px]" />
-              ) : (
-                <span className={cn("text-xs font-black", slug === "gad-7" ? "text-[#0D9488]" : "text-on-surface-variant/40")}>
-                  2
-                </span>
-              )}
-            </div>
-            <span className={cn("text-[9px] font-extrabold tracking-wider uppercase", slug === "gad-7" ? "text-[#0D9488]" : "text-on-surface-variant/50")}>
-              GAD-7
-            </span>
-          </div>
-
-          <div className="h-px w-8 bg-border-default" />
-
-          {/* PSS-10 */}
-          <div className="flex flex-col items-center gap-1.5">
-            <div
-              className={cn(
-                "w-8 h-8 rounded-full flex items-center justify-center border transition-all duration-300 shadow-sm",
-                slug === "pss-10"
-                  ? "border-[#F59E0B] ring-4 ring-[#F59E0B]/25"
-                  : "bg-surface-card border-border-default text-on-surface-variant/40"
-              )}
-            >
-              <span className={cn("text-xs font-black", slug === "pss-10" ? "text-[#F59E0B]" : "text-on-surface-variant/40")}>
-                3
+        {slug !== "mixed" ? (
+          <div className="mt-10 flex items-center justify-center gap-6 select-none">
+            {/* PHQ-9 */}
+            <div className="flex flex-col items-center gap-1.5">
+              <div
+                className={cn(
+                  "w-8 h-8 rounded-full flex items-center justify-center border transition-all duration-300 shadow-sm",
+                  completedTimeline["phq-9"]
+                    ? "bg-brand-secondary border-brand-secondary text-white"
+                    : slug === "phq-9"
+                    ? "border-[#2563EB] ring-4 ring-[#2563EB]/25"
+                    : "bg-surface-card border-border-default text-on-surface-variant/40"
+                )}
+              >
+                {completedTimeline["phq-9"] ? (
+                  <Check className="h-4.5 w-4.5 stroke-[3px]" />
+                ) : (
+                  <span className={cn("text-xs font-black", slug === "phq-9" ? "text-[#2563EB]" : "text-on-surface-variant/40")}>
+                    1
+                  </span>
+                )}
+              </div>
+              <span className={cn("text-[9px] font-extrabold tracking-wider uppercase", slug === "phq-9" ? "text-[#2563EB]" : "text-on-surface-variant/50")}>
+                PHQ-9
               </span>
             </div>
-            <span className={cn("text-[9px] font-extrabold tracking-wider uppercase", slug === "pss-10" ? "text-[#F59E0B]" : "text-on-surface-variant/50")}>
-              PSS
+
+            <div className="h-px w-8 bg-border-default" />
+
+            {/* GAD-7 */}
+            <div className="flex flex-col items-center gap-1.5">
+              <div
+                className={cn(
+                  "w-8 h-8 rounded-full flex items-center justify-center border transition-all duration-300 shadow-sm",
+                  completedTimeline["gad-7"]
+                    ? "bg-brand-secondary border-brand-secondary text-white"
+                    : slug === "gad-7"
+                    ? "border-[#0D9488] ring-4 ring-[#0D9488]/25"
+                    : "bg-surface-card border-border-default text-on-surface-variant/40"
+                )}
+              >
+                {completedTimeline["gad-7"] ? (
+                  <Check className="h-4.5 w-4.5 stroke-[3px]" />
+                ) : (
+                  <span className={cn("text-xs font-black", slug === "gad-7" ? "text-[#0D9488]" : "text-on-surface-variant/40")}>
+                    2
+                  </span>
+                )}
+              </div>
+              <span className={cn("text-[9px] font-extrabold tracking-wider uppercase", slug === "gad-7" ? "text-[#0D9488]" : "text-on-surface-variant/50")}>
+                GAD-7
+              </span>
+            </div>
+
+            <div className="h-px w-8 bg-border-default" />
+
+            {/* ARAQ */}
+            <div className="flex flex-col items-center gap-1.5">
+              <div
+                className={cn(
+                  "w-8 h-8 rounded-full flex items-center justify-center border transition-all duration-300 shadow-sm",
+                  slug === "araq"
+                    ? "border-[#F59E0B] ring-4 ring-[#F59E0B]/25"
+                    : "bg-surface-card border-border-default text-on-surface-variant/40"
+                )}
+              >
+                <span className={cn("text-xs font-black", slug === "araq" ? "text-[#F59E0B]" : "text-on-surface-variant/40")}>
+                  3
+                </span>
+              </div>
+              <span className={cn("text-[9px] font-extrabold tracking-wider uppercase", slug === "araq" ? "text-[#F59E0B]" : "text-on-surface-variant/50")}>
+                ARAQ
+              </span>
+            </div>
+          </div>
+        ) : (
+          <div className="mt-10 flex flex-col items-center gap-1 select-none">
+            <span className="text-[10px] font-bold text-on-surface-variant/70 uppercase tracking-widest text-center">
+              Please answer all questions honestly. Your data is secure and confidential.
             </span>
           </div>
-        </div>
+        )}
       </main>
 
       {/* Sticky Bottom Footer Navigation */}
@@ -409,7 +528,7 @@ export default function QuestionnairePage() {
           {/* Question Progress Text */}
           <div className="flex-1 text-center">
             <span className="text-on-surface-variant/90 font-extrabold text-[11px] bg-surface-page border border-border-default/50 px-3.5 py-1.5 rounded-full select-none">
-              {answeredCount} of {totalQuestions} {slug === "pss-10" ? "questions" : ""}
+              {answeredCount} of {totalQuestions} {slug === "araq" ? "questions" : ""}
             </span>
           </div>
 

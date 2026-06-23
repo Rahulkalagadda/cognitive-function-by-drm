@@ -48,6 +48,11 @@ export interface PatientPortalReport {
   phq9_score: number | null;
   gad7_score: number | null;
   pss10_score: number | null;
+  araq_score: number | null;
+  araq_sec_a_score: number | null;
+  araq_sec_b_score: number | null;
+  araq_sec_c_score: number | null;
+  araq_sec_d_score: number | null;
   recommendations: string[];
   language: string;
   is_archived: boolean;

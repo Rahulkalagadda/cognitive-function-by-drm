@@ -1,4 +1,4 @@
-export type QuestionnaireSlug = "phq-9" | "gad-7" | "pss-10";
+export type QuestionnaireSlug = "phq-9" | "gad-7" | "araq" | "mixed";
 
 export interface QuestionnaireItem {
   id: string;

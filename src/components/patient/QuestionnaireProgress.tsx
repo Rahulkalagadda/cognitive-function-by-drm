@@ -11,7 +11,7 @@ export default function QuestionnaireProgress({ token }: { token?: string }) {
   const surveys = [
     { slug: "phq-9", name: "PHQ-9 Depression Screener", color: "text-brand-primary" },
     { slug: "gad-7", name: "GAD-7 Anxiety Screener", color: "text-brand-secondary" },
-    { slug: "pss-10", name: "PSS-10 Perceived Stress", color: "text-brand-amber" }
+    { slug: "araq", name: "ARAQ ADHD Avoidance & Anxiety", color: "text-brand-amber" }
   ];
 
   return (
@@ -22,7 +22,7 @@ export default function QuestionnaireProgress({ token }: { token?: string }) {
 
       <div className="space-y-3">
         {surveys.map((survey) => {
-          const isDone = completed[survey.slug as "phq-9" | "gad-7" | "pss-10"];
+          const isDone = completed[survey.slug as "phq-9" | "gad-7" | "araq"];
           return (
             <div
               key={survey.slug}

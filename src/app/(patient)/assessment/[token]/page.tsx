@@ -56,7 +56,7 @@ function AssessmentOnboardingPage() {
   }
 
   const handleStart = () => {
-    router.push(`/questionnaire/phq-9?token=${token}`);
+    router.push(`/questionnaire/mixed?token=${token}`);
   };
 
   const accordionSteps = [

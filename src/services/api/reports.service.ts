@@ -27,6 +27,11 @@ function mapReportResponse(p: any): AssessmentReport {
     phq9Score: p.phq9_score,
     gad7Score: p.gad7_score,
     pss10Score: p.pss10_score,
+    araqScore: p.araq_score,
+    araqSecAScore: p.araq_sec_a_score,
+    araqSecBScore: p.araq_sec_b_score,
+    araqSecCScore: p.araq_sec_c_score,
+    araqSecDScore: p.araq_sec_d_score,
     createdAt: p.created_at,
     updatedAt: p.updated_at
   };

@@ -14,7 +14,7 @@ import { TaskId } from "@/types/task.types";
 // React task components — no jsPsych, no SSR issues, no HTML strings
 import CPTTask from "@/components/tasks/CPTTask";
 import GoNoGoTask from "@/components/tasks/GoNoGoTask";
-import NBackTask from "@/components/tasks/jspsych/NBackJsPsych";
+import NBackTask from "@/components/tasks/NBackTask";
 import TowerPuzzleTask from "@/components/tasks/TowerPuzzleTask";
 import ShapeMatchTask from "@/components/tasks/ShapeMatchTask";
 import WordRecallTask from "@/components/tasks/WordRecallTask";

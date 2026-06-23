@@ -172,16 +172,18 @@ function ReportsPage() {
                       </tr>
                     );
                   })()}
-                  {selectedReport.pss10Score !== undefined && selectedReport.pss10Score !== null && (() => {
-                    const val = selectedReport.pss10Score!;
-                    let interp = "Low Perceived Stress"; let color = "text-emerald-700";
-                    if (val >= 27) { interp = "High Perceived Stress"; color = "text-red-600"; }
-                    else if (val >= 14) { interp = "Moderate Perceived Stress"; color = "text-amber-600"; }
+                  {selectedReport.araqScore !== undefined && selectedReport.araqScore !== null && (() => {
+                    const val = selectedReport.araqScore!;
                     return (
-                      <tr key="pss10" className="hover:bg-surface-muted/30">
-                        <td className="p-3 text-on-surface font-medium border border-border-default">PSS-10 (Perceived Stress Scale)</td>
-                        <td className="p-3 text-center font-extrabold text-on-surface font-mono border border-border-default">{val} / 40</td>
-                        <td className={`p-3 font-semibold border border-border-default ${color}`}>{interp}</td>
+                      <tr key="araq" className="hover:bg-surface-muted/30">
+                        <td className="p-3 text-on-surface font-medium border border-border-default">ARAQ (ADHD-Related Avoidance & Anxiety)</td>
+                        <td className="p-3 text-center font-extrabold text-on-surface font-mono border border-border-default">{val} / 104</td>
+                        <td className="p-3 font-semibold border border-border-default text-brand-primary text-xs space-y-0.5">
+                          <div>• Sec A (Exec Dysf): <b>{selectedReport.araqSecAScore ?? 0}</b>/32</div>
+                          <div>• Sec B (Anticip Anxiety): <b>{selectedReport.araqSecBScore ?? 0}</b>/24</div>
+                          <div>• Sec C (Fear Failure): <b>{selectedReport.araqSecCScore ?? 0}</b>/32</div>
+                          <div>• Sec D (Functional Imp): <b>{selectedReport.araqSecDScore ?? 0}</b>/16</div>
+                        </td>
                       </tr>
                     );
                   })()}

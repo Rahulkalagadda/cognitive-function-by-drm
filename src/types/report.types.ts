@@ -25,4 +25,9 @@ export interface AssessmentReport extends BaseEntity {
   phq9Score?: number;
   gad7Score?: number;
   pss10Score?: number;
+  araqScore?: number;
+  araqSecAScore?: number;
+  araqSecBScore?: number;
+  araqSecCScore?: number;
+  araqSecDScore?: number;
 }

@@ -20,7 +20,7 @@ import { render, screen, fireEvent, act } from "@testing-library/react";
 
 import CPTTask          from "../components/tasks/CPTTask";
 import GoNoGoTask       from "../components/tasks/GoNoGoTask";
-import NBackJsPsych     from "../components/tasks/jspsych/NBackJsPsych";
+import NBackTask          from "../components/tasks/NBackTask";
 import WordRecallTask   from "../components/tasks/WordRecallTask";
 import TowerPuzzleTask  from "../components/tasks/TowerPuzzleTask";
 import DividedAttentionTask from "../components/tasks/DividedAttentionTask";
@@ -32,7 +32,7 @@ describe("All tasks — Mount without crash (practice mode)", () => {
   const cases: [string, React.ReactElement][] = [
     ["CPTTask",               <CPTTask isPractice onComplete={vi.fn()} />],
     ["GoNoGoTask",            <GoNoGoTask isPractice onComplete={vi.fn()} />],
-    ["NBackJsPsych",          <NBackJsPsych isPractice onComplete={vi.fn()} />],
+    ["NBackTask",             <NBackTask isPractice onComplete={vi.fn()} />],
     ["WordRecallTask",        <WordRecallTask isPractice onComplete={vi.fn()} />],
     ["TowerPuzzleTask",       <TowerPuzzleTask isPractice onComplete={vi.fn()} />],
     ["DividedAttentionTask",  <DividedAttentionTask isPractice onComplete={vi.fn()} />],
@@ -263,9 +263,9 @@ describe("WordRecallTask — Raw metric formula + intrusion errors", () => {
 //   sequence[0..7]: M M K K L L P P
 //   matches at positions: 1(M), 3(K), 5(L), 7(P)  → 4 targets
 
-describe("NBackJsPsych — Raw metric formula", () => {
+describe("NBackTask — Raw metric formula", () => {
   it("renders MATCH (SPACE) button", () => {
-    render(<NBackJsPsych isPractice onComplete={vi.fn()} />);
+    render(<NBackTask isPractice onComplete={vi.fn()} />);
     expect(screen.getByText("MATCH (SPACE)")).toBeInTheDocument();
   });
 
@@ -282,7 +282,7 @@ describe("NBackJsPsych — Raw metric formula", () => {
      */
     vi.useFakeTimers();
     const onComplete = vi.fn();
-    render(<NBackJsPsych isPractice onComplete={onComplete} />);
+    render(<NBackTask isPractice onComplete={onComplete} />);
 
     // 8 trials × 2000ms + completion step
     for (let i = 0; i < 10; i++) {
@@ -311,6 +311,32 @@ describe("NBackJsPsych — Raw metric formula", () => {
     expect(p.rawMetrics).toHaveProperty("nBackLevel");
     expect(Array.isArray(p.rawMetrics.levels)).toBe(true);
 
+    vi.useRealTimers();
+  });
+
+  it("emits correct=1 when a correct MATCH response is given", async () => {
+    vi.useFakeTimers();
+    const onComplete = vi.fn();
+    render(<NBackTask isPractice onComplete={onComplete} />);
+
+    // Practice sequence: M M K K L L P P
+    // Trial 0: "M"
+    await act(async () => { vi.advanceTimersByTime(2000); });
+
+    // Trial 1: "M" (match!)
+    const btn = screen.getByText("MATCH (SPACE)");
+    await act(async () => {
+      fireEvent.click(btn);
+    });
+
+    // Advance remaining trials (6 more trials + completion branch)
+    for (let i = 0; i < 8; i++) {
+      await act(async () => { vi.advanceTimersByTime(2000); });
+    }
+
+    expect(onComplete).toHaveBeenCalledTimes(1);
+    const p = onComplete.mock.calls[0][0];
+    expect(p.correctResponses).toBe(1);
     vi.useRealTimers();
   });
 });
@@ -346,5 +372,65 @@ describe("UpdatingTask — Render", () => {
   it("renders level and instruction text in practice mode", () => {
     render(<UpdatingTask isPractice onComplete={vi.fn()} />);
     expect(screen.getByText("Practice Trial")).toBeInTheDocument();
+  });
+
+  it("registers correct probes correctly", async () => {
+    vi.spyOn(Math, "random").mockReturnValue(0.5);
+    vi.useFakeTimers();
+    const onComplete = vi.fn();
+    render(<UpdatingTask isPractice onComplete={onComplete} />);
+
+    // Sequence (5 items): 5, 5, 5, 5, 5
+    // Probe points at itemIndex 2 and 3
+    
+    // Initial 600ms start delay to set isRunning=true
+    await act(async () => { vi.advanceTimersByTime(600); });
+    
+    // itemIndex 0
+    await act(async () => { vi.advanceTimersByTime(2150); });
+    // itemIndex 1
+    await act(async () => { vi.advanceTimersByTime(2150); });
+    
+    // itemIndex 2 (probe)
+    // 600ms timer runs before probe screen opens
+    await act(async () => { vi.advanceTimersByTime(600); });
+
+    // Expect input screen to be open
+    const input = screen.getByPlaceholderText(/e\.g\.\s+7/);
+    const okBtn = screen.getByText("OK");
+    
+    await act(async () => {
+      fireEvent.change(input, { target: { value: "5" } });
+      fireEvent.click(okBtn);
+    });
+
+    // Probe feedback screen shows for 1000ms
+    await act(async () => { vi.advanceTimersByTime(1000); });
+
+    // Next item starts (itemIndex 3, which is also a probe)
+    // 600ms timer before probe screen opens
+    await act(async () => { vi.advanceTimersByTime(600); });
+
+    const input2 = screen.getByPlaceholderText(/e\.g\.\s+7/);
+    const okBtn2 = screen.getByText("OK");
+
+    await act(async () => {
+      fireEvent.change(input2, { target: { value: "5" } });
+      fireEvent.click(okBtn2);
+    });
+
+    // Probe feedback shows for 1000ms
+    await act(async () => { vi.advanceTimersByTime(1000); });
+
+    // itemIndex 4 (normal digit, last digit)
+    await act(async () => { vi.advanceTimersByTime(2150); });
+
+    expect(onComplete).toHaveBeenCalledTimes(1);
+    const p = onComplete.mock.calls[0][0];
+    expect(p.correctResponses).toBe(2);
+    expect(p.missedResponses).toBe(0);
+
+    vi.useRealTimers();
+    vi.restoreAllMocks();
   });
 });
