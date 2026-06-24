@@ -93,14 +93,14 @@ export const TASK_REGISTRY: Record<TaskId, TaskDefinition> = {
     id: "divided-attention",
     title: "Divided Attention Task",
     domain: "Attention",
-    instructions: "Track the moving dot on the grid by tapping it. At the same time, press RESPOND whenever the dot flashes RED. Ignore other flash colors.",
+    instructions: "Track the moving dot on the grid by tapping it. At the same time, listen to the audio stream and press RESPOND (or Spacebar) when you hear the target (Level 1: number '7', Level 2: letter 'X', Level 3: same number twice in a row).",
     speakText: {
-      en: "Divided Attention Task. A dot will move around a grid. Tap the dot to show you are tracking it. When the dot flashes red, press Respond as quickly as possible. Ignore other colored flashes.",
-      hi: "विभाजित ध्यान टेस्ट। एक बिंदु ग्रिड पर घूमेगा। उसे ट्रैक करने के लिए उस पर टैप करें। जब बिंदु लाल हो जाए, तो जल्दी से RESPOND दबाएं।",
-      mr: "विभाजित लक्ष टेस्ट. एक बिंदू ग्रिडवर फिरेल. तो ट्रॅक करण्यासाठी त्यावर टॅप करा. बिंदू लाल झाल्यावर शक्य तितक्या लवकर RESPOND दाबा.",
-      te: "డివైడెడ్ అటెన్షన్ టెస్ట్. ఒక చుక్క గ్రిడ్‌పై కదులుతుంది. దాన్ని ట్రాక్ చేయడానికి టాప్ చేయండి. చుక్క ఎరుపు రంగులోకి మారినప్పుడు వేగంగా RESPOND నొక్కండి."
+      en: "Divided Attention Task. A dot will move around a grid. Tap the dot to show you are tracking it. At the same time, listen to the spoken audio and press Respond when you hear the target. In level 1, the target is the number 7. In level 2, the target is the letter X. In level 3, it is a one back task, so press when you hear the same number twice in a row.",
+      hi: "विभाजित ध्यान टेस्ट। ग्रिड पर एक बिंदु घूमेगा। उसे ट्रैक करने के लिए उस पर टैप करें। साथ ही, बोले गए ऑडियो को सुनें और जब आप लक्ष्य सुनें तो RESPOND दबाएं। लेवल 1 में लक्ष्य 7 नंबर है, लेवल 2 में लक्ष्य X अक्षर है, लेवल 3 में लगातार दो बार एक ही नंबर आने पर दबाएं।",
+      mr: "विभाजित लक्ष टेस्ट. ग्रिडवर एक बिंदू फिरेल. तो ट्रॅक करण्यासाठी त्यावर टॅप करा. त्याच वेळी, ऑडिओ ऐका आणि लक्ष्य ऐकल्यावर RESPOND दाबा. लेव्हल 1 मध्ये लक्ष्य 7 नंबर आहे, लेव्हल 2 मध्ये लक्ष्य X अक्षर आहे, लेव्हल 3 मध्ये सलग दोनदा तोच नंबर आल्यावर दाबा.",
+      te: "డివైడెడ్ అటెన్షన్ టెస్ట్. ఒక చుక్క గ్రిడ్‌పై కదులుతుంది. దాన్ని ట్రాక్ చేయడానికి టాప్ చేయండి. అదే సమయంలో, ఆడియోను వినండి మరియు లక్ష్యాన్ని విన్నప్పుడు RESPOND నొక్కండి. లెవెల్ 1 లో లక్ష్యం సంఖ్య 7, లెవెల్ 2 లో లక్ష్యం అక్షరం X, లెవెల్ 3 లో వరుసగా రెండుసార్లు ఒకే సంఖ్య వచ్చినప్పుడు నొక్కండి."
     },
-    durationSeconds: 120
+    durationSeconds: 420
   },
   "updating": {
     id: "updating",

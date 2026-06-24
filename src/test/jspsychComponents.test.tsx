@@ -360,9 +360,9 @@ describe("TowerPuzzleTask — Render and structure", () => {
 // ─── DividedAttention — Dual task ────────────────────────────────────────────
 
 describe("DividedAttentionTask — Render", () => {
-  it("renders RESPOND ON RED button", () => {
+  it("renders RESPOND TO AUDIO button", () => {
     render(<DividedAttentionTask isPractice onComplete={vi.fn()} />);
-    expect(screen.getByText("RESPOND ON RED (SPACE)")).toBeInTheDocument();
+    expect(screen.getByText("RESPOND TO AUDIO (SPACE)")).toBeInTheDocument();
   });
 });
 
