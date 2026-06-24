@@ -1,7 +1,7 @@
 // ─── API Base URL ────────────────────────────────────────────────────────────
 // Production URL is hardcoded to HTTPS to prevent mixed content errors.
 // Env vars were unreliable due to Vercel's Sensitive flag encrypting them.
-const PROD_API_URL = "https://cognitive-backend-production-503e.up.railway.app/api/v1";
+const PROD_API_URL = "https://cognitive-backend-production-5211.up.railway.app/api/v1";
 
 export const BASE_URL =
   process.env.NODE_ENV === "production"
