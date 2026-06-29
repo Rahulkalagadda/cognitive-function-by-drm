@@ -93,14 +93,14 @@ export const TASK_REGISTRY: Record<TaskId, TaskDefinition> = {
     id: "divided-attention",
     title: "Divided Attention Task",
     domain: "Attention",
-    instructions: "Track the moving dot on the grid by tapping it. At the same time, listen to the audio stream and press RESPOND (or Spacebar) when you hear the target (Level 1: number '7', Level 2: letter 'X', Level 3: same number twice in a row).",
+    instructions: "This task has 5 blocks: 1. Visual tracking only. 2. Audio listening only. 3. Visual + Audio combined. 4. Visual + Audio (increased speed). 5. Visual + Audio (1-Back pattern + distractors). Check the on-screen descriptions for instructions.",
     speakText: {
-      en: "Divided Attention Task. A dot will move around a grid. Tap the dot to show you are tracking it. At the same time, listen to the spoken audio and press Respond when you hear the target. In level 1, the target is the number 7. In level 2, the target is the letter X. In level 3, it is a one back task, so press when you hear the same number twice in a row.",
-      hi: "विभाजित ध्यान टेस्ट। ग्रिड पर एक बिंदु घूमेगा। उसे ट्रैक करने के लिए उस पर टैप करें। साथ ही, बोले गए ऑडियो को सुनें और जब आप लक्ष्य सुनें तो RESPOND दबाएं। लेवल 1 में लक्ष्य 7 नंबर है, लेवल 2 में लक्ष्य X अक्षर है, लेवल 3 में लगातार दो बार एक ही नंबर आने पर दबाएं।",
-      mr: "विभाजित लक्ष टेस्ट. ग्रिडवर एक बिंदू फिरेल. तो ट्रॅक करण्यासाठी त्यावर टॅप करा. त्याच वेळी, ऑडिओ ऐका आणि लक्ष्य ऐकल्यावर RESPOND दाबा. लेव्हल 1 मध्ये लक्ष्य 7 नंबर आहे, लेव्हल 2 मध्ये लक्ष्य X अक्षर आहे, लेव्हल 3 मध्ये सलग दोनदा तोच नंबर आल्यावर दाबा.",
-      te: "డివైడెడ్ అటెన్షన్ టెస్ట్. ఒక చుక్క గ్రిడ్‌పై కదులుతుంది. దాన్ని ట్రాక్ చేయడానికి టాప్ చేయండి. అదే సమయంలో, ఆడియోను వినండి మరియు లక్ష్యాన్ని విన్నప్పుడు RESPOND నొక్కండి. లెవెల్ 1 లో లక్ష్యం సంఖ్య 7, లెవెల్ 2 లో లక్ష్యం అక్షరం X, లెవెల్ 3 లో వరుసగా రెండుసార్లు ఒకే సంఖ్య వచ్చినప్పుడు నొక్కండి."
+      en: "Divided Attention Task. This task consists of five blocks. In block one, only track the moving dot by tapping it. In block two, only listen to the audio stream and press Respond when you hear the target number seven. In blocks three, four, and five, you will do both tasks together: track the dot and press Respond when you hear the target cue.",
+      hi: "विभाजित ध्यान टेस्ट। इस टेस्ट में पांच ब्लॉक हैं। ब्लॉक 1 में, केवल ग्रिड पर बिंदु को ट्रैक करें। ब्लॉक 2 में, केवल ऑडियो सुनें और जब 7 सुनें तो Respond दबाएं। ब्लॉक 3, 4 और 5 में, आपको दोनों काम एक साथ करने होंगे।",
+      mr: "विभाजित लक्ष टेस्ट. या टेस्टमध्ये पाच ब्लॉक आहेत. ब्लॉक 1 मध्ये, फक्त ग्रिडवरील बिंदू ट्रॅक करा. ब्लॉक 2 मध्ये, फक्त ऑडिओ ऐका आणि 7 ऐकल्यावर Respond दाबा. ब्लॉक 3, 4 आणि 5 मध्ये, तुम्हाला दोन्ही कामे एकत्र करावी लागतील.",
+      te: "డివైడెడ్ అటెన్షన్ టెస్ట్. ఈ పరీక్షలో ఐదు బ్లాకులు ఉన్నాయి. బ్లాక్ 1 లో, గ్రిడ్‌పై చుక్కను మాత్రమే ట్రాక్ చేయండి. బ్లాక్ 2 లో, ఆడియోను మాత్రమే వినండి మరియు 7 విన్నప్పుడు Respond నొక్కండి. బ్లాక్ 3, 4 మరియు 5 లలలో, మీరు రెండు పనులను కలిసి చేయాలి."
     },
-    durationSeconds: 420
+    durationSeconds: 300
   },
   "updating": {
     id: "updating",

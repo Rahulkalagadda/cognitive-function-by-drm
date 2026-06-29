@@ -44,6 +44,9 @@ describe("ClinicalMetricsCard", () => {
         primaryAccuracy: 86,
         secondaryAccuracy: 75,
         interferenceScore: 18,
+        dualTaskCostVisual: -15,
+        dualTaskCostAuditory: -10,
+        rtVariability: 45,
       },
     };
 
@@ -70,5 +73,8 @@ describe("ClinicalMetricsCard", () => {
     expect(screen.getByText("81%")).toBeInTheDocument(); // 0.81 * 100
     expect(screen.getByText("8.4 sec")).toBeInTheDocument(); // 8400 ms
     expect(screen.getByText("18%")).toBeInTheDocument();
+    expect(screen.getByText("-15%")).toBeInTheDocument();
+    expect(screen.getByText("-10%")).toBeInTheDocument();
+    expect(screen.getByText("45 ms")).toBeInTheDocument();
   });
 });

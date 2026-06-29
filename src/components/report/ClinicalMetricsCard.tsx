@@ -94,6 +94,9 @@ export default function ClinicalMetricsCard({ clinicalMetrics = {}, hideHeader =
         { label: "Primary Accuracy", value: getVal("divided-attention", "primaryAccuracy", "%") },
         { label: "Secondary Accuracy", value: getVal("divided-attention", "secondaryAccuracy", "%") },
         { label: "Interference Score", value: getVal("divided-attention", "interferenceScore", "%") },
+        { label: "Visual Dual-Task Cost", value: getVal("divided-attention", "dualTaskCostVisual", "%") },
+        { label: "Auditory Dual-Task Cost", value: getVal("divided-attention", "dualTaskCostAuditory", "%") },
+        { label: "Reaction Time Variability", value: getVal("divided-attention", "rtVariability", " ms") },
       ],
     },
     {

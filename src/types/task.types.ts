@@ -21,7 +21,7 @@ export interface TaskResponse {
 
 /** Per-level performance record stored inside rawMetrics.levels[] */
 export interface LevelResult {
-  level: 1 | 2 | 3;
+  level: number;
   accuracy: number;
   reactionTime: number;
   correctResponses: number;
@@ -32,7 +32,7 @@ export interface LevelResult {
 
 /** Extended clinical metrics stored inside rawMetrics */
 export interface RawMetrics {
-  difficultyLevel: 1 | 2 | 3;         // highest level reached
+  difficultyLevel: number;             // highest level reached
   levels: LevelResult[];               // per-level breakdown
 
   // CPT-specific
@@ -60,4 +60,7 @@ export interface RawMetrics {
   primaryAccuracy?: number;
   secondaryAccuracy?: number;
   interferenceScore?: number;          // primaryAccuracy - dualTaskPrimaryAccuracy
+  dualTaskCostVisual?: number;
+  dualTaskCostAuditory?: number;
+  rtVariability?: number;
 }
