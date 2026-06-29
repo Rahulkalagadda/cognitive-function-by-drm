@@ -17,6 +17,34 @@ export function useVoice() {
     };
   }, []);
 
+  const warmUp = () => {
+    try {
+      // 1. Play a brief silent HTML5 Audio element to switch the browser audio session to the media/loudspeaker channel
+      const dummyAudio = new Audio(
+        "data:audio/mp3;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU2LjM2LjEwMAAAAAAAAAAAAAAA//OEAAAAAAAAAAAAAAAAAAAAAAAASW5mbwAAAA8AAAAEAAABIADAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDV1dXV1dXV1dXV1dXV1dXV1dXV1dXV1dXV6urq6urq6urq6urq6urq6urq6urq6urq6v////////////////////////////////8AAAAATGF2YzU2LjQxAAAAAAAAAAAAAAAAJAAAAAAAAAAAASDs90hvAAAAAAAAAAAAAAAAAAAA//MUZAAAAAGkAAAAAAAAA0gAAAAATEFN//MUZAMAAAGkAAAAAAAAA0gAAAAARTMu//MUZAYAAAGkAAAAAAAAA0gAAAAAOTku//MUZAkAAAGkAAAAAAAAA0gAAAAANVVV"
+      );
+      dummyAudio.play().catch(() => {});
+
+      // 2. Initialize and resume a silent Web Audio Context to further enforce media session mode
+      const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
+      if (AudioCtx) {
+        const ctx = new AudioCtx();
+        if (ctx.state === "suspended") {
+          ctx.resume().catch(() => {});
+        }
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        gain.gain.setValueAtTime(0, ctx.currentTime);
+        osc.start(0);
+        osc.stop(0.01);
+      }
+    } catch (e) {
+      // Silently catch browser security blocks
+    }
+  };
+
   const speak = (text: string, langCode: string) => {
     if (!synthRef.current) return;
 
@@ -29,6 +57,9 @@ export function useVoice() {
     } catch {
       // Silently ignore cancel errors — not actionable by the user
     }
+
+    // Warm up audio session to route sound to the main speaker/loudspeaker
+    warmUp();
 
     const utterance = new SpeechSynthesisUtterance(text);
     utteranceRef.current = utterance;
@@ -106,5 +137,6 @@ export function useVoice() {
     isPlaying,
     speak,
     stop,
+    warmUp,
   };
 }

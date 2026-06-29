@@ -148,14 +148,15 @@ export default function DividedAttentionTask({ isPractice, onComplete }: Divided
   const configs = isPractice ? [PRACTICE_CONFIG] : LEVEL_CONFIGS;
   const { language } = useAssessmentStore();
   const langCode = language || "en";
-  const { speak, stop: stopVoice } = useVoice();
+  const { speak, stop: stopVoice, warmUp } = useVoice();
 
-  const [levelIndex,     setLevelIndex]     = useState(0);
-  const [dotPosition,    setDotPosition]    = useState(0);
-  const [moveIndex,      setMoveIndex]      = useState(0);
-  const [levelBanner,    setLevelBanner]    = useState<string | null>(null);
-  const [flashFeedback,  setFlashFeedback]  = useState<"hit" | "miss" | null>(null);
-  const [isRunning,      setIsRunning]      = useState(false);
+  const [levelIndex,      setLevelIndex]     = useState(0);
+  const [dotPosition,     setDotPosition]    = useState(0);
+  const [moveIndex,       setMoveIndex]      = useState(0);
+  const [levelBanner,     setLevelBanner]    = useState<string | null>(null);
+  const [flashFeedback,   setFlashFeedback]  = useState<"hit" | "miss" | null>(null);
+  const [isRunning,       setIsRunning]      = useState(false);
+  const [hasStartedLevel, setHasStartedLevel] = useState(false);
 
   // Per-level metrics refs
   const auditoryScheduleRef     = useRef<SpokenCue[]>([]);
@@ -191,10 +192,8 @@ export default function DividedAttentionTask({ isPractice, onComplete }: Divided
     setMoveIndex(0);
     setFlashFeedback(null);
     levelStartTimeRef.current = Date.now();
-
-    // Short start delay
-    const t = setTimeout(() => setIsRunning(true), 800);
-    return () => clearTimeout(t);
+    setHasStartedLevel(false);
+    setIsRunning(false);
   }, [levelIndex]);
 
   // ── Auditory Loop runner ─────────────────────────────────────────────────
@@ -330,6 +329,7 @@ export default function DividedAttentionTask({ isPractice, onComplete }: Divided
 
   // ── Secondary task: press RESPOND on red ─────────────────────────────────
   const handleRespond = useCallback(() => {
+    warmUp();
     if (!isRunning) return;
     const active = activeStimulusRef.current;
     if (!active || active.hasResponded) return;
@@ -400,7 +400,27 @@ export default function DividedAttentionTask({ isPractice, onComplete }: Divided
       </div>
 
       {/* Grid */}
-      {!isRunning && moveIndex === 0 ? (
+      {!hasStartedLevel ? (
+        <div className="flex-1 flex items-center justify-center">
+          <div className="text-center space-y-4">
+            <div className="w-16 h-16 rounded-full bg-brand-primary/10 border-2 border-brand-primary/30 flex items-center justify-center mx-auto animate-pulse">
+              <div className="w-8 h-8 rounded-full bg-brand-primary" />
+            </div>
+            <button
+              onClick={() => {
+                warmUp();
+                setHasStartedLevel(true);
+                setIsRunning(true);
+                levelStartTimeRef.current = Date.now();
+              }}
+              type="button"
+              className="px-6 h-12 bg-brand-primary hover:bg-brand-primary/95 text-white font-extrabold text-xs rounded-xl shadow-lg shadow-brand-primary/25 active:scale-95 transition-all cursor-pointer flex items-center justify-center gap-2"
+            >
+              Start {isPractice ? "Practice" : `Level ${cfg?.level ?? 1}`}
+            </button>
+          </div>
+        </div>
+      ) : !isRunning && moveIndex === 0 ? (
         <div className="flex-1 flex items-center justify-center">
           <div className="text-center space-y-3">
             <div className="w-16 h-16 rounded-full bg-brand-primary/10 border-2 border-brand-primary/30 flex items-center justify-center mx-auto animate-pulse">

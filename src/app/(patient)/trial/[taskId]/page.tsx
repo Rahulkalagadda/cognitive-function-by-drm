@@ -20,6 +20,8 @@ import WordRecallTask from "@/components/tasks/WordRecallTask";
 import DividedAttentionTask from "@/components/tasks/DividedAttentionTask";
 import UpdatingTask from "@/components/tasks/UpdatingTask";
 
+import { useVoice } from "@/hooks/useVoice";
+
 export default function PracticeTrialPage() {
   const params = useParams();
   const searchParams = useSearchParams();
@@ -34,6 +36,8 @@ export default function PracticeTrialPage() {
   const [trialCompleted, setTrialCompleted] = useState(false);
   const [trialResults, setTrialResults] = useState<any>(null);
   const [retryKey, setRetryKey] = useState(0); // force component remount on retry
+
+  const { warmUp } = useVoice();
 
   useEffect(() => {
     if (token) {
@@ -65,12 +69,14 @@ export default function PracticeTrialPage() {
   };
 
   const handleRetry = () => {
+    warmUp();
     setTrialCompleted(false);
     setTrialResults(null);
     setRetryKey((prev) => prev + 1);
   };
 
   const handleStartActual = () => {
+    warmUp();
     router.push(`/task/${taskId}?token=${token}&step=${stepIndex}`);
   };
 

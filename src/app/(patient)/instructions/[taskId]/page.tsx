@@ -22,7 +22,7 @@ export default function TaskInstructionsPage() {
   const stepIndex = stepStr !== null ? parseInt(stepStr, 10) : 0;
 
   const { currentSession, loadSession, isLoading, error, language } = useAssessment();
-  const { isPlaying, speak, stop } = useVoice();
+  const { isPlaying, speak, stop, warmUp } = useVoice();
 
   useEffect(() => {
     if (token) {
@@ -67,6 +67,7 @@ export default function TaskInstructionsPage() {
     if (isPlaying) {
       stop();
     } else {
+      warmUp();
       const text = taskDef.speakText[language] || taskDef.speakText["en"];
       speak(text, language);
     }
@@ -74,6 +75,7 @@ export default function TaskInstructionsPage() {
 
   const handleStartPractice = () => {
     stop();
+    warmUp();
     router.push(`/trial/${taskId}?token=${token}&step=${stepIndex}`);
   };
 
